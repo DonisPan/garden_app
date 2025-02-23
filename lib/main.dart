@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:garden_app/PlantScreen/plant.dart';
-import 'package:garden_app/pages/home.dart';
+import 'package:garden_app/models/global.dart';
+import 'package:garden_app/models/supabase.dart';
+import 'package:garden_app/screens/home.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  Global();
+  // Global().delUserSession();
+  await SupabaseService().initialize();
+
+  // SupabaseService().register('denvas002@gmail.com', 'hello123');
+  // SupabaseService().login('denvas002@gmail.com', 'hello123');
+  // SupabaseService().logout();
+
   runApp(const MyApp());
 }
 
@@ -14,11 +25,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
-      // home: const PlantScreen(
-      //   plantName: "Japanese Maple",
-      //   imagePath:
-      //       "https://static.vecteezy.com/system/resources/previews/013/743/890/non_2x/pixel-art-tree-icon-png.png",
-      // ),
       home: MainPage()
     );
   }

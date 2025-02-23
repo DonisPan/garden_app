@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:garden_app/widgets/top_bar.';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -7,7 +8,7 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: topBar(),
+      appBar: TopBar(),
       body: Column(
         children: [
           Container(
@@ -51,7 +52,7 @@ class MainPage extends StatelessWidget {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(12),
-                          child: SvgPicture.asset('assets/svgs/menu.svg', height: 20,),                  
+                          child: SvgPicture.asset('assets/svgs/filters.svg', height: 20,),                  
                         ),
                       ],
                     ),
@@ -66,69 +67,6 @@ class MainPage extends StatelessWidget {
             ),
           )
         ],
-      ),
-    );
-  }
-
-  AppBar topBar() {
-    return AppBar(
-      title: Text('Hello World',
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 30,
-        fontWeight: FontWeight.bold
-      ),
-      ),
-      backgroundColor: Colors.white,
-      elevation: 0.0,
-      centerTitle: true,
-      
-      leading: 
-        leftButton(),
-
-      actions: [
-        rightButton(),        
-      ],
-    );
-  }
-
-  GestureDetector rightButton() {
-    return GestureDetector(
-        onTap: () {
-          print("Right Button Pressed!");
-        },
-        child: Container(
-        margin: EdgeInsets.all(10),
-        alignment: Alignment.center,
-        width: 37,
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 240, 239, 239),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: SvgPicture.asset(
-          'assets/svgs/menu.svg',
-          height: 20,
-          ),
-        ),
-      );
-  }
-
-  GestureDetector leftButton() {
-    return GestureDetector(
-      onTap: () {
-        print("Left Button Pressed!");
-      },
-      child: Container(
-      margin: EdgeInsets.all(10),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 240, 239, 239),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: SvgPicture.asset(
-        'assets/svgs/back.svg',
-        height: 25,
-        ),
       ),
     );
   }
