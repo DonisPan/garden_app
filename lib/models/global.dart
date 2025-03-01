@@ -18,6 +18,10 @@ class Global {
     _instance.authorized = false;
   }
 
+  static bool isAuthorized() {
+    return _instance.authorized;
+  }
+
   Future<void> setUserSession(String token) async => await secureStorage.write(key: 'sessionToken', value: token);
 
   Future<String?> getUserSession() async => await secureStorage.read(key: 'sessionToken');
