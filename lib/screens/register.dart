@@ -1,51 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:garden_app/models/supabase.dart';
-import 'package:garden_app/screens/home.dart';
-import 'package:garden_app/screens/register.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  LoginPageState createState() => LoginPageState();
+  RegisterPageState createState() => RegisterPageState();
 }
 
-class LoginPageState extends State<LoginPage> {
+class RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameField = TextEditingController();
+  final TextEditingController _surnameField = TextEditingController();
   final TextEditingController _emailField = TextEditingController();
   final TextEditingController _passwordField = TextEditingController();
   String? _errorMessage;
 
-  Future<void> _login() async {
-    setState(() { _errorMessage = null; }); // reset error message
+  Future<void> _register() async {
 
-      String email = _emailField.text.trim();
-      String password = _passwordField.text.trim();
-      _errorMessage = validate(email, password); // validate error message
-
-      if (_errorMessage != null) { return; } // only try to login when there is no error
-
-      String? response = await SupabaseService().login(email, password);
-      if (response != null) {
-        setState(() { _errorMessage = response; }); // update error message
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MainPage()),
-        ); // redirect to home page after successfull login
-      }
-    }
-
-    String? validate(String email, String password) {
-      if (email.isEmpty || password.isEmpty) {        
-        return "Email and password cannot be empty.";
-      }
-
-      if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$").hasMatch(email)) {
-        return "Invalid email format.";
-      }
-
-      return null;
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +29,85 @@ class LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                "Login",
+                "Register",
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Go back button
+                  Expanded(
+                    child: Container(
+                    margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(255, 216, 216, 216),
+                          blurRadius: 30,
+                          spreadRadius: 0.0,
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _nameField,
+                      // keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(10),
+                        hintText: "Your name",
+                        hintStyle: const TextStyle(
+                          color: Color.fromARGB(255, 216, 216, 216),
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                                    ),
+                  ),
+                const SizedBox(height: 15),
+
+                  // Register button
+                  Expanded(
+                    child: Container(
+                    margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(255, 216, 216, 216),
+                          blurRadius: 30,
+                          spreadRadius: 0.0,
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _surnameField,
+                      // keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.all(10),
+                        hintText: "Your surname",
+                        hintStyle: const TextStyle(
+                          color: Color.fromARGB(255, 216, 216, 216),
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                                    ),
+                  ),
+                const SizedBox(height: 15),
+                ],
+              ),
 
               // Email field
               Container(
@@ -159,7 +205,7 @@ class LoginPageState extends State<LoginPage> {
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  onPressed: _login,
+                  onPressed: _register,
                   child: const Text("Login", style: TextStyle(fontSize: 16)),
                 ),
               ),
@@ -178,20 +224,6 @@ class LoginPageState extends State<LoginPage> {
                     child: const Text(
                       "Back",
                       style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                  ),
-
-                  // Register button
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const RegisterPage()),
-                      );
-                    },
-                    child: const Text(
-                      "Create an account",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
