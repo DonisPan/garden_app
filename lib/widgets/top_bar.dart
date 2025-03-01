@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:garden_app/models/global.dart';
+import 'package:garden_app/screens/login.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   const TopBar({super.key});
@@ -19,15 +20,19 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       elevation: 0.0,
       centerTitle: true,
-      leading: leftButton(),
+      leading: leftButton(context),
       actions: [rightButton()],
     );
   }
 
-  Widget leftButton() {
+  Widget leftButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
         print("Left Button Pressed!");
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -37,7 +42,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: SvgPicture.asset(
-          'assets/svgs/back.svg',
+          'assets/svgs/profile.svg',
           height: 25,
         ),
       ),
