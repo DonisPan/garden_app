@@ -23,22 +23,22 @@ class SupabaseService {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<String?> login(String email, String password) async {
     try {
-      await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
+      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
 
-      final session = await Supabase.instance.client.auth.currentSession;
-      if (session != null) {
-        final token = session.refreshToken;
+      if (response.user != null) {
+        final token = response.session?.refreshToken;
         await Global().setUserSession(token!);
         Global.authorize();
+        return null;
       } else {
         throw Exception('No Session Found!');
       }      
     } catch (error) {
-      print('Login failed: $error');
-    }    
-  }  
+      return "Wrong email or password";
+    }
+  }
 
   Future<void> logout() async {
     try {
