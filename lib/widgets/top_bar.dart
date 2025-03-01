@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:garden_app/models/global.dart';
+import 'package:garden_app/models/supabase.dart';
 import 'package:garden_app/screens/login.dart';
+import 'package:garden_app/screens/home.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   const TopBar({super.key});
@@ -28,11 +30,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   Widget leftButton(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("Left Button Pressed!");
-        Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-        );
+        leftButtonRedirect(context);
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -47,6 +45,21 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
     );
+  }
+
+  Future<void> leftButtonRedirect(BuildContext context) {
+    if (Global.isAuthorized()) {
+      SupabaseService().logout();
+      return Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const MainPage()),
+        );
+    } else {
+      return Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+    }
   }
 
   Widget rightButton() {
