@@ -48,15 +48,27 @@ class SupabaseService {
       Global.unAuthorize();
     } catch (error) {
       print('Logout failed: $error');
-    }
-    print('User logged out!');
+    }    
   }
 
-  Future<void> register(String email, String password) async {
+  Future<String?> register(String email, String password, String name, String surname) async {
       try {
-      await Supabase.instance.client.auth.signUp(email: email, password: password);
+      var result = await Supabase.instance.client.auth.signUp(email: email, password: password); // register into supabase auth
+      var userId = result.user?.id;
+
+      if (userId == null) {
+        return 'Registration failed';
+      }
+
+      await Supabase.instance.client.from('ga_users').insert({
+        'id': userId,
+        'name': name,
+        'surname': surname,
+      }); // after succesfull registration insert additional data into users table
+
     } catch (error) {
-      print('Registration failed: $error');
+      return 'Could not instert additional data';
     }
+    return null;
   }
 }

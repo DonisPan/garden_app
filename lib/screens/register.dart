@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:garden_app/screens/login.dart';
+import 'package:garden_app/models/supabase.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -15,7 +17,25 @@ class RegisterPageState extends State<RegisterPage> {
   String? _errorMessage;
 
   Future<void> _register() async {
+      setState(() { _errorMessage = null; }); // reset error message
 
+      String name = _nameField.text.trim();
+      String surname = _surnameField.text.trim();
+      String email = _emailField.text.trim();
+      String password = _passwordField.text.trim();
+      // _errorMessage = validate(email, password); // validate error message
+
+      if (_errorMessage != null) { return; } // only try to login when there is no error
+      
+      String? response = await SupabaseService().register(email, password, name, surname);
+      if (response != null) {
+        setState(() { _errorMessage = response; }); // update error message
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        ); // redirect to login page after successfull register
+      }
   }
 
   @override
@@ -206,7 +226,7 @@ class RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   onPressed: _register,
-                  child: const Text("Login", style: TextStyle(fontSize: 16)),
+                  child: const Text("Register", style: TextStyle(fontSize: 16)),
                 ),
               ),
 
