@@ -46,6 +46,10 @@ dependencies:
   # Secure Storage
   shared_preferences: ^2.5.2
   flutter_secure_storage: ^9.2.4
+  # Pick image from galery
+  image_picker: ^1.1.2
+  # Permissions
+  permission_handler: ^11.4.0
 
 
 dev_dependencies:
