@@ -5,7 +5,7 @@ import 'package:garden_app/screens/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   Global();
   // Global().delUserSession();
   await SupabaseService().initialize();
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
-      home: MainPage()
+      home: MainPage(),
     );
   }
 }

@@ -41,15 +41,23 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+
+	<key>NSCameraUsageDescription</key>
+	<string>camera</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>photos</string>
+
+	<!-- <key>NSPhotoLibraryAddUsageDescription</key>
+	<string>App needs permission to save photos</string> -->
+
+	<key>NSRemindersUsageDescription</key>
+    <string>reminders</string>
+
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>App needs access to the camera</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>App needs access to the photo library</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>App needs permission to save photos</string>
 </dict>
 </plist>

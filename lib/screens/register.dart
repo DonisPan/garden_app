@@ -36,28 +36,39 @@ class RegisterPageState extends State<RegisterPage> {
   final TextEditingController _passwordField = TextEditingController();
   String? _errorMessage;
   Future<void> _register() async {
-      setState(() { _errorMessage = null; }); // reset error message
+    setState(() {
+      _errorMessage = null;
+    }); // reset error message
 
-      String name = _nameField.text.trim();
-      String surname = _surnameField.text.trim();
-      String email = _emailField.text.trim();
-      String password = _passwordField.text.trim();
-      // _errorMessage = validate(email, password); // validate error message
+    String name = _nameField.text.trim();
+    String surname = _surnameField.text.trim();
+    String email = _emailField.text.trim();
+    String password = _passwordField.text.trim();
+    // _errorMessage = validate(email, password); // validate error message
 
-      if (_errorMessage != null) { return; } // only try to login when there is no error
-      
-      String? response = await SupabaseService().register(email, password, name, surname);
-      if (response != null) {
-        setState(() { _errorMessage = response; }); // update error message
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-        ); // redirect to login page after successfull register
-      }
+    if (_errorMessage != null) {
+      return;
+    } // only try to login when there is no error
+
+    String? response = await SupabaseService().register(
+      email,
+      password,
+      name,
+      surname,
+    );
+    if (response != null) {
+      setState(() {
+        _errorMessage = response;
+      }); // update error message
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      ); // redirect to login page after successfull register
+    }
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -80,10 +91,18 @@ class RegisterPageState extends State<RegisterPage> {
                   child: CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.grey[300],
-                    backgroundImage: _profilePicture != null ? FileImage(_profilePicture!) : null,
-                    child: _profilePicture == null
-                        ? const Icon(Icons.camera_alt, size: 40, color: Colors.white)
-                        : null,
+                    backgroundImage:
+                        _profilePicture != null
+                            ? FileImage(_profilePicture!)
+                            : null,
+                    child:
+                        _profilePicture == null
+                            ? const Icon(
+                              Icons.camera_alt,
+                              size: 40,
+                              color: Colors.white,
+                            )
+                            : null,
                   ),
                 ),
               ),
@@ -92,9 +111,7 @@ class RegisterPageState extends State<RegisterPage> {
               // Name & Surname Row
               Row(
                 children: [
-                  Expanded(
-                    child: _buildInputField(_nameField, "Your name"),
-                  ),
+                  Expanded(child: _buildInputField(_nameField, "Your name")),
                   const SizedBox(width: 10),
                   Expanded(
                     child: _buildInputField(_surnameField, "Your surname"),
@@ -104,11 +121,19 @@ class RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 15),
 
               // Email Field
-              _buildInputField(_emailField, "Your email...", keyboardType: TextInputType.emailAddress),
+              _buildInputField(
+                _emailField,
+                "Your email...",
+                keyboardType: TextInputType.emailAddress,
+              ),
               const SizedBox(height: 15),
 
               // Password Field
-              _buildInputField(_passwordField, "Your password...", isPassword: true),
+              _buildInputField(
+                _passwordField,
+                "Your password...",
+                isPassword: true,
+              ),
               const SizedBox(height: 10),
 
               // 🔹 Display error message
@@ -139,14 +164,16 @@ class RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 10),
 
               // 🔹 Bottom Buttons (Back)
-              Center(
-                child: TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    "Back",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      "Back",
+                      style: TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
