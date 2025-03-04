@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:garden_app/screens/login.dart';
+import 'package:garden_app/views/login.dart';
 import 'package:garden_app/models/supabase.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
