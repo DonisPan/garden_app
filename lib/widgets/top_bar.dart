@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:garden_app/models/global.dart';
 import 'package:garden_app/models/supabase.dart';
-import 'package:garden_app/screens/login.dart';
-import 'package:garden_app/screens/home.dart';
+import 'package:garden_app/views/login.dart';
+import 'package:garden_app/views/home.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   const TopBar({super.key});

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/global.dart';
 import 'package:garden_app/models/supabase.dart';
-import 'package:garden_app/screens/home.dart';
+import 'package:garden_app/views/home.dart';
+import 'package:garden_app/views/login.dart';
+import 'package:garden_app/views/register.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,8 +26,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      title: 'Garden App',
       theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
       home: MainPage(),
+      routes: {
+        '/login': (context) => const LoginPage(),
+        '/home': (context) => const MainPage(),
+        '/register': (context) => const RegisterPage(),
+      },
     );
   }
 }
