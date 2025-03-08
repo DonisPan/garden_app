@@ -25,7 +25,10 @@ class SupabaseService {
 
   Future<String?> login(String email, String password) async {
     try {
-      final response = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
+      final response = await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
 
       if (response.user != null) {
         final token = response.session?.refreshToken;
@@ -34,7 +37,7 @@ class SupabaseService {
         return null;
       } else {
         throw Exception('No Session Found!');
-      }      
+      }
     } catch (error) {
       return "Wrong email or password";
     }
@@ -48,24 +51,29 @@ class SupabaseService {
       Global.unAuthorize();
     } catch (error) {
       print('Logout failed: $error');
-    }    
+    }
   }
 
-  Future<String?> register(String email, String password, String name, String surname) async {
-      try {
-      var result = await Supabase.instance.client.auth.signUp(email: email, password: password); // register into supabase auth
+  Future<String?> register(
+    String email,
+    String password,
+    String name,
+    String surname,
+  ) async {
+    try {
+      var result = await Supabase.instance.client.auth.signUp(
+        email: email,
+        password: password,
+      ); // register into supabase auth
       var userId = result.user?.id;
 
       if (userId == null) {
         return 'Registration failed';
       }
 
-      await Supabase.instance.client.from('ga_users').insert({
-        'id': userId,
-        'name': name,
-        'surname': surname,
-      }); // after succesfull registration insert additional data into users table
-
+      await Supabase.instance.client.from('ga_users').insert(
+        {'id': userId, 'name': name, 'surname': surname},
+      ); // after succesfull registration insert additional data into users table
     } catch (error) {
       return 'Could not instert additional data';
     }
