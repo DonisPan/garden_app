@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:garden_app/models/global.dart';
-import 'package:garden_app/models/supabase.dart';
+import 'package:garden_app/services/global.dart';
+import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/login.dart';
 import 'package:garden_app/views/home.dart';
 
@@ -52,7 +52,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
       SupabaseService().logout();
       return Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const MainPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
         );
     } else {
       return Navigator.push(

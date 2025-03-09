@@ -1,20 +1,22 @@
-import 'package:garden_app/models/global.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:garden_app/services/global.dart';
 
 class SupabaseService {
   static final SupabaseService _instance = SupabaseService._internal();
   SupabaseService._internal();
   factory SupabaseService() => _instance;
 
-  Future<void> initialize() async {
+  static Future<void> initialize() async {
     await dotenv.load();
 
+    // initialize supabase
     await Supabase.initialize(
       url: dotenv.env['SUPABASE_URL']!,
       anonKey: dotenv.env['SUPABASE_KEY']!,
     );
 
+    // try to load refresh token from secure storage and set user session
     final session = await Global().getUserSession();
     print('Session: $session');
     if (session != null) {
@@ -72,7 +74,7 @@ class SupabaseService {
       }
 
       await Supabase.instance.client.from('ga_users').insert(
-        {'id': userId, 'name': name, 'surname': surname},
+        {'auth_id': userId, 'name': name, 'surname': surname},
       ); // after succesfull registration insert additional data into users table
     } catch (error) {
       return 'Could not instert additional data';

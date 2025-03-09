@@ -1,5 +1,5 @@
 name: garden_app
-description: "A new Flutter project."
+description: "Flutter application (ios and android) for managing your plants"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -42,7 +42,7 @@ dependencies:
   cached_network_image: ^3.4.1
   # Supabase
   flutter_dotenv: ^5.1.0
-  supabase_flutter: ^2.8.3
+  supabase_flutter: ^2.8.4
   # Secure Storage
   shared_preferences: ^2.5.2
   flutter_secure_storage: ^9.2.4
