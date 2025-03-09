@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
-import 'package:garden_app/services/supabase_service.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final AuthRepository repository;
@@ -25,7 +24,6 @@ class LoginViewModel extends ChangeNotifier {
     _errorMessage = validate(email, password);
 
     if (_errorMessage == null) {
-      // String? response = await SupabaseService().login(email, password);
       String? response = await repository.login(email, password);
       if (response != null) {
         _errorMessage = response;
