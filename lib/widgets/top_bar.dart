@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:garden_app/repositories/auth_remote_repositary.dart';
 import 'package:garden_app/services/global.dart';
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/login.dart';
@@ -49,7 +50,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
   Future<void> leftButtonRedirect(BuildContext context) {
     if (Global.isAuthorized()) {
-      SupabaseService().logout();
+      AuthRepositaryRemote().logout();
       return Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),

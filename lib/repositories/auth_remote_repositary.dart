@@ -8,15 +8,13 @@ class AuthRepositaryRemote implements AuthRepository {
   }
 
   @override
-  Future<void> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<void> logout() async{
+    await SupabaseService().logout();
   }
 
   @override
-  Future<String?> register(String email, String password, String name, String surname) {
-    // TODO: implement register
-    throw UnimplementedError();
+  Future<String?> register(String email, String password, String name, String surname) async{
+    return await SupabaseService().register(email, password, name, surname);
   }
   
   @override
