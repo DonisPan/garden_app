@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:garden_app/repositories/auth_remote_repositary.dart';
+import 'package:garden_app/repositories/auth_remote_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -26,7 +26,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RegisterViewModel(AuthRepositaryRemote()),
+      create: (_) => RegisterViewModel(AuthRemoteRepositary()),
       child: Consumer<RegisterViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -44,7 +44,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // Profile Picture Picker
+                      // profile picture
                       Center(
                         child: GestureDetector(
                           onTap: () => _selectProfilePicture(context),
@@ -62,7 +62,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
 
-                      // Name & Surname Row
+                      // name and surname
                       Row(
                         children: [
                           Expanded(child: _buildInputField(
@@ -76,7 +76,7 @@ class RegisterPage extends StatelessWidget {
                       ),
                       const SizedBox(height: 15),
 
-                      // Email Field
+                      // email
                       _buildInputField(
                         controller: viewModel.emailController,
                         hintText: "Your email...",
@@ -104,28 +104,14 @@ class RegisterPage extends StatelessWidget {
 
                       // Register Button
                       _buildRegisterButton(viewModel, context),
-                      // SizedBox(
-                      //   width: double.infinity,
-                      //   child: ElevatedButton(
-                      //     style: ElevatedButton.styleFrom(
-                      //       padding: const EdgeInsets.symmetric(vertical: 12),
-                      //       shape: RoundedRectangleBorder(
-                      //         borderRadius: BorderRadius.circular(15),
-                      //       ),
-                      //     ),
-                      //     onPressed: viewModel.isLoading ? null : () => viewModel.register(context),
-                      //     child: viewModel.isLoading
-                      //         ? const CircularProgressIndicator(color: Colors.white)
-                      //         : const Text("Register", style: TextStyle(fontSize: 16)),
-                      //   ),
-                      // ),
+                      
                       const SizedBox(height: 10),
 
                       // Bottom Buttons (Back)
                       Row(
                         children: [
                           TextButton(
-                            onPressed: () => Navigator.pop(context),
+                            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
                             child: const Text(
                               "Back",
                               style: TextStyle(fontSize: 16, color: Colors.grey),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:garden_app/repositories/auth_remote_repositary.dart';
+import 'package:garden_app/repositories/auth_remote_repository.dart';
 import 'package:garden_app/viewmodels/login_viewmodel.dart';
-import 'package:garden_app/views/register.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -10,7 +9,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(AuthRepositaryRemote()),
+      create: (_) => LoginViewModel(AuthRemoteRepositary()),
       child: Consumer<LoginViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -69,20 +68,14 @@ class LoginPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
                           child: const Text(
                             "Back",
                             style: TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                         ),
                         TextButton(
-                          onPressed:
-                              () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterPage(),
-                                ),
-                              ),
+                          onPressed: () => Navigator.pushReplacementNamed(context, '/register'),
                           child: const Text(
                             "Create an account",
                             style: TextStyle(
