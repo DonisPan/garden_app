@@ -1,37 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:garden_app/repositories/auth_remote_repositary.dart';
+import 'package:garden_app/repositories/auth_remote_repository.dart';
+import 'package:garden_app/repositories/plant_remote_repository.dart';
 import 'package:garden_app/services/global.dart';
-import 'package:garden_app/services/supabase_service.dart';
+import 'package:garden_app/viewmodels/home_viewmodel.dart';
 import 'package:garden_app/views/login.dart';
 import 'package:garden_app/views/home.dart';
+import 'package:provider/provider.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
   const TopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(
-        'Hello World',
-        style: TextStyle(
-          color: Global().authorized ? Colors.black : Colors.red,
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      backgroundColor: Colors.white,
-      elevation: 0.0,
-      centerTitle: true,
-      leading: leftButton(context),
-      actions: [rightButton()],
-    );
+    return ChangeNotifierProvider<HomeViewModel>(
+      create: (_) => HomeViewModel(PlantRemoteRepository(), AuthRemoteRepositary()),
+      child: Consumer<HomeViewModel>(
+        builder: (context, viewModel, child) {
+          return AppBar(
+            title: Text(
+              'Hello World',
+              style: TextStyle(
+                color: Global().authorized ? Colors.black : Colors.red,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            backgroundColor: Colors.white,
+            elevation: 0.0,
+            centerTitle: true,
+            leading: _leftButton(viewModel, context),
+            actions: [rightButton()],
+          );
+        },),);
+    // return AppBar(
+    //   title: Text(
+    //     'Hello World',
+    //     style: TextStyle(
+    //       color: Global().authorized ? Colors.black : Colors.red,
+    //       fontSize: 30,
+    //       fontWeight: FontWeight.bold,
+    //     ),
+    //   ),
+    //   backgroundColor: Colors.white,
+    //   elevation: 0.0,
+    //   centerTitle: true,
+    //   leading: leftButton(context),
+    //   actions: [rightButton()],
+    // );
   }
 
-  Widget leftButton(BuildContext context) {
+  Widget _leftButton(HomeViewModel viewModel, BuildContext context) {
     return GestureDetector(
       onTap: () {
-        leftButtonRedirect(context);
+        viewModel.goToProfilePage(context);
+        // leftButtonRedirect(context);
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -50,7 +73,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
   Future<void> leftButtonRedirect(BuildContext context) {
     if (Global.isAuthorized()) {
-      AuthRepositaryRemote().logout();
+      AuthRemoteRepositary().logout();
       return Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
