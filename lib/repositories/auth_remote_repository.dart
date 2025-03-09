@@ -1,7 +1,7 @@
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
 
-class AuthRepositaryRemote implements AuthRepository {
+class AuthRemoteRepositary implements AuthRepository {
   @override
   Future<String?> login(String email, String password) async {
     return await SupabaseService().login(email, password);

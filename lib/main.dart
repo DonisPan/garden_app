@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garden_app/repositories/auth_remote_repositary.dart';
+import 'package:garden_app/repositories/auth_remote_repository.dart';
 import 'package:garden_app/services/global.dart';
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/home.dart';
@@ -9,7 +9,7 @@ import 'package:garden_app/views/register.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  AuthRepositaryRemote remoteRepositary;
+  AuthRemoteRepositary authRemoteRepositary;
 
   Global();
   // Global().delUserSession();
