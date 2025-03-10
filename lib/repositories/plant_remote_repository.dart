@@ -3,9 +3,32 @@ import 'package:garden_app/repositories/plant_repository.dart';
 
 class PlantRemoteRepository implements PlantRepository {
   @override
-  Future<Plant> getPlant() {
-    // TODO: implement getPlant
+  Future<String?> changeClass(int id, String newClass) {
+    // TODO: implement changeClass
     throw UnimplementedError();
   }
 
+  @override
+  Future<String?> changeFamily(int id, String newFamily) {
+    // TODO: implement changeFamily
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Plant>> getPlants() {
+    // TODO: implement getPlants
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> removePlant(int id) {
+    // TODO: implement removePlant
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> renamePlant(int id, String newName) {
+    // TODO: implement renamePlant
+    throw UnimplementedError();
+  }
 }
