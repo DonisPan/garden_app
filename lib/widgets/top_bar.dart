@@ -16,7 +16,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeViewModel>(
       create:
-          (_) => HomeViewModel(PlantRemoteRepository(), AuthRemoteRepositary()),
+          (_) => HomeViewModel(PlantRemoteRepository(), AuthRemoteRepository()),
       child: Consumer<HomeViewModel>(
         builder: (context, viewModel, child) {
           return AppBar(
@@ -74,7 +74,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
 
   Future<void> leftButtonRedirect(BuildContext context) {
     if (Global.isAuthorized()) {
-      AuthRemoteRepositary().logout();
+      AuthRemoteRepository().logout();
       return Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const HomePage()),
@@ -90,8 +90,7 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   Widget rightButton() {
     return GestureDetector(
       onTap: () {
-        print("Right Button Pressed!");
-        SupabaseService().getPlants(userId: 1);
+        // SupabaseService().getPlants(userId: 1);
       },
       child: Container(
         margin: const EdgeInsets.all(10),

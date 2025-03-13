@@ -19,7 +19,8 @@ class SupabaseService {
 
     // try to load refresh token from secure storage and set user session
     final session = await Global().getUserSession();
-    print('Session: $session');
+    final id = await Global().getUserId();
+    print('Session: $session, id: $id');
     if (session != null) {
       await Supabase.instance.client.auth.setSession(session);
       Global.authorize();
@@ -34,15 +35,23 @@ class SupabaseService {
       );
 
       if (response.user != null) {
+        final authId = response.user!.id;
+        final id =
+            await Supabase.instance.client
+                .from('ga_users')
+                .select('id')
+                .eq('auth_id', authId)
+                .single();
+
         final token = response.session?.refreshToken;
-        await Global().setUserSession(token!);
+        await Global().setUserSession(token!, id['id'] as int);
         Global.authorize();
         return null;
       } else {
         throw Exception('No Session Found!');
       }
     } catch (error) {
-      return "Wrong email or password";
+      return "Wrong email or password, ${error.toString()}";
     }
   }
 

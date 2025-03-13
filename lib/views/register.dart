@@ -17,8 +17,10 @@ class RegisterPage extends StatelessWidget {
       final pickedImage = await picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         final file = File(pickedImage.path);
-        Provider.of<RegisterViewModel>(context, listen: false)
-            .setProfilePicture(file);
+        Provider.of<RegisterViewModel>(
+          context,
+          listen: false,
+        ).setProfilePicture(file);
       }
     }
   }
@@ -26,7 +28,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RegisterViewModel(AuthRemoteRepositary()),
+      create: (_) => RegisterViewModel(AuthRemoteRepository()),
       child: Consumer<RegisterViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -40,7 +42,10 @@ class RegisterPage extends StatelessWidget {
                     children: [
                       const Text(
                         "Register",
-                        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 20),
 
@@ -51,12 +56,18 @@ class RegisterPage extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 50,
                             backgroundColor: Colors.grey[300],
-                            backgroundImage: viewModel.profilePicture != null
-                                ? FileImage(viewModel.profilePicture!)
-                                : null,
-                            child: viewModel.profilePicture == null
-                                ? const Icon(Icons.camera_alt, size: 40, color: Colors.white)
-                                : null,
+                            backgroundImage:
+                                viewModel.profilePicture != null
+                                    ? FileImage(viewModel.profilePicture!)
+                                    : null,
+                            child:
+                                viewModel.profilePicture == null
+                                    ? const Icon(
+                                      Icons.camera_alt,
+                                      size: 40,
+                                      color: Colors.white,
+                                    )
+                                    : null,
                           ),
                         ),
                       ),
@@ -65,13 +76,19 @@ class RegisterPage extends StatelessWidget {
                       // name and surname
                       Row(
                         children: [
-                          Expanded(child: _buildInputField(
-                            controller: viewModel.nameController,
-                            hintText: "Your name")),
+                          Expanded(
+                            child: _buildInputField(
+                              controller: viewModel.nameController,
+                              hintText: "Your name",
+                            ),
+                          ),
                           const SizedBox(width: 10),
-                          Expanded(child: _buildInputField(
-                            controller: viewModel.surnameController,
-                            hintText: "Your surname")),
+                          Expanded(
+                            child: _buildInputField(
+                              controller: viewModel.surnameController,
+                              hintText: "Your surname",
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 15),
@@ -98,23 +115,33 @@ class RegisterPage extends StatelessWidget {
                           padding: const EdgeInsets.only(bottom: 10, left: 10),
                           child: Text(
                             viewModel.errorMessage!,
-                            style: const TextStyle(color: Colors.red, fontSize: 14),
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
 
                       // Register Button
                       _buildRegisterButton(viewModel, context),
-                      
+
                       const SizedBox(height: 10),
 
                       // Bottom Buttons (Back)
                       Row(
                         children: [
                           TextButton(
-                            onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+                            onPressed:
+                                () => Navigator.pushReplacementNamed(
+                                  context,
+                                  '/login',
+                                ),
                             child: const Text(
                               "Back",
-                              style: TextStyle(fontSize: 16, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ],
@@ -169,7 +196,10 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRegisterButton(RegisterViewModel viewModel, BuildContext context) {
+  Widget _buildRegisterButton(
+    RegisterViewModel viewModel,
+    BuildContext context,
+  ) {
     return Container(
       margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
       decoration: BoxDecoration(
@@ -189,7 +219,8 @@ class RegisterPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        onPressed: viewModel.isLoading ? null : () => viewModel.register(context),
+        onPressed:
+            viewModel.isLoading ? null : () => viewModel.register(context),
         child:
             viewModel.isLoading
                 ? const CircularProgressIndicator(color: Colors.white)

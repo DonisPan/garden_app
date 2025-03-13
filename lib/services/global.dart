@@ -23,12 +23,29 @@ class Global {
     return _instance.authorized;
   }
 
-  Future<void> setUserSession(String token) async =>
-      await secureStorage.write(key: 'sessionToken', value: token);
+  Future<void> setUserSession(String token, int id) async {
+    await secureStorage.write(key: 'sessionToken', value: token);
+    await secureStorage.write(key: 'userId', value: id.toString());
+  }
 
-  Future<String?> getUserSession() async =>
-      await secureStorage.read(key: 'sessionToken');
+  Future<String?> getUserSession() async {
+    final refreshToken = await secureStorage.read(key: 'sessionToken');
+    if (refreshToken == null) {
+      return null;
+    }
+    return refreshToken;
+  }
 
-  Future<void> delUserSession() async =>
-      await secureStorage.delete(key: 'sessionToken');
+  Future<int?> getUserId() async {
+    final idStr = await secureStorage.read(key: 'userId');
+    if (idStr == null) {
+      return null;
+    }
+    return int.tryParse(idStr);
+  }
+
+  Future<void> delUserSession() async {
+    await secureStorage.delete(key: 'sessionToken');
+    await secureStorage.delete(key: 'userId');
+  }
 }

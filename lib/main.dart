@@ -9,7 +9,7 @@ import 'package:garden_app/views/register.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  AuthRemoteRepositary authRemoteRepositary;
+  AuthRemoteRepository authRemoteRepositary;
 
   Global();
   // Global().delUserSession();

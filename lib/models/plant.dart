@@ -6,6 +6,7 @@ class Plant {
   final String? _familyCommon;
   final String? _familyScientific;
   final bool _isCustom;
+  bool _needWater = false;
 
   Plant({
     required int id,
@@ -30,4 +31,7 @@ class Plant {
   String? get familyCommon => _familyCommon;
   String? get familyScientific => _familyScientific;
   bool get isCustom => _isCustom;
+
+  bool get needWater => _needWater;
+  set needWater(bool par) => _needWater = par;
 }

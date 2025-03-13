@@ -5,6 +5,7 @@ import 'package:garden_app/repositories/plant_remote_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:garden_app/widgets/top_bar.dart';
 import '../viewmodels/home_viewmodel.dart';
+import '../models/plant.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -12,7 +13,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeViewModel>(
-      create: (_) => HomeViewModel(PlantRemoteRepository(), AuthRemoteRepositary()),
+      create:
+          (_) => HomeViewModel(PlantRemoteRepository(), AuthRemoteRepository()),
       child: Consumer<HomeViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -27,7 +29,7 @@ class HomePage extends StatelessWidget {
                         color: const Color.fromARGB(255, 216, 216, 216),
                         blurRadius: 30,
                         spreadRadius: 0.0,
-                      )
+                      ),
                     ],
                   ),
                   child: TextField(
@@ -76,12 +78,81 @@ class HomePage extends StatelessWidget {
                         borderSide: BorderSide.none,
                       ),
                     ),
-                    // Update ViewModel when text changes.
                     onChanged: viewModel.updateSearchQuery,
                   ),
                 ),
-                // Here you could add additional widgets that use viewModel.searchQuery,
-                // for example, to display filtered search results.
+                const SizedBox(height: 20),
+                // plants list
+                Expanded(
+                  child:
+                      viewModel.plants.isEmpty
+                          ? const Center(child: Text("No plants found."))
+                          : ListView.builder(
+                            itemCount: viewModel.plants.length,
+                            itemBuilder: (context, index) {
+                              final Plant plant = viewModel.plants[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 5,
+                                  vertical: 5,
+                                ),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color.fromARGB(
+                                          255,
+                                          216,
+                                          216,
+                                          216,
+                                        ),
+                                        blurRadius: 30,
+                                        spreadRadius: 0.0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      // main button
+                                      Expanded(
+                                        child: TextButton(
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.all(15),
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          onPressed: () {
+                                            // TODO
+                                          },
+                                          child: Text(
+                                            plant.name,
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      // watter button
+                                      IconButton(
+                                        onPressed: () {
+                                          // TODO
+                                          viewModel.water(plant);
+                                        },
+                                        icon: const Icon(Icons.water_drop),
+                                        color:
+                                            plant.needWater
+                                                ? Colors.blueAccent
+                                                : Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                ),
               ],
             ),
           );

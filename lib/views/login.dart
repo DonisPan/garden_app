@@ -9,7 +9,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(AuthRemoteRepositary()),
+      create: (_) => LoginViewModel(AuthRemoteRepository()),
       child: Consumer<LoginViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -68,14 +68,22 @@ class LoginPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
+                          onPressed:
+                              () => Navigator.pushReplacementNamed(
+                                context,
+                                '/home',
+                              ),
                           child: const Text(
                             "Back",
                             style: TextStyle(fontSize: 16, color: Colors.grey),
                           ),
                         ),
                         TextButton(
-                          onPressed: () => Navigator.pushReplacementNamed(context, '/register'),
+                          onPressed:
+                              () => Navigator.pushReplacementNamed(
+                                context,
+                                '/register',
+                              ),
                           child: const Text(
                             "Create an account",
                             style: TextStyle(
