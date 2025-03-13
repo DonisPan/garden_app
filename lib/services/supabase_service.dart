@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:garden_app/models/plant.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:garden_app/services/global.dart';
 
@@ -80,5 +81,44 @@ class SupabaseService {
       return 'Could not instert additional data';
     }
     return null;
+  }
+
+  Future<List<Plant>> getPlants({required int userId}) async {
+    try {
+      final response = await Supabase.instance.client
+          .from('ga_user_plants')
+          .select('name, plant_id:ga_plant(*, plant_family(*))')
+          .eq('user_id', userId);
+
+      final data = response as List<dynamic>;
+
+      final plants =
+          data.map((row) {
+            final plantData = row['plant_id'] as Map<String, dynamic>;
+            final familyData =
+                plantData['plant_family'] as Map<String, dynamic>?;
+
+            return Plant(
+              id: plantData['id'] as int,
+              name:
+                  row['name'] as String? ??
+                  (plantData['name'] as String? ?? 'Name missing!'),
+              note: plantData['note'] as String?,
+              plantClass: plantData['class'] as String? ?? 'Class missing!',
+              familyCommon:
+                  familyData?['name_common'] as String? ??
+                  'Family common missing!',
+              familyScientific:
+                  familyData?['name_scientific'] as String? ??
+                  'Family scientfic missing!',
+              isCustom: plantData['is_custom'] as bool,
+            );
+          }).toList();
+
+      return plants;
+    } catch (error) {
+      print('Error fetching plants: $error');
+      rethrow;
+    }
   }
 }

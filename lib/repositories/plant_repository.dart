@@ -1,7 +1,7 @@
 import 'package:garden_app/models/plant.dart';
 
 abstract class PlantRepository {
-  Future<List<Plant>> getPlants();
+  Future<List<Plant>> getPlants(int userId);
   Future<String?> renamePlant(int id, String newName);
   Future<String?> changeClass(int id, String newClass);
   Future<String?> changeFamily(int id, String newFamily);

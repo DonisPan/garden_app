@@ -1,5 +1,6 @@
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
+import 'package:garden_app/services/supabase_service.dart';
 
 class PlantRemoteRepository implements PlantRepository {
   @override
@@ -15,9 +16,8 @@ class PlantRemoteRepository implements PlantRepository {
   }
 
   @override
-  Future<List<Plant>> getPlants() {
-    // TODO: implement getPlants
-    throw UnimplementedError();
+  Future<List<Plant>> getPlants(int userId) {
+    return SupabaseService().getPlants(userId: userId);
   }
 
   @override
