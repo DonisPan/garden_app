@@ -65,6 +65,7 @@ class SupabaseService {
       Global.unAuthorize();
     } catch (error) {
       print('Logout failed: $error');
+      rethrow;
     }
   }
 

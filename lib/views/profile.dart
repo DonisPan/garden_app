@@ -13,95 +13,107 @@ class ProfilePage extends StatelessWidget {
       create: (_) => ProfileViewModel(PlantRemoteRepository()),
       child: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
-          return Scaffold(
-            appBar: TopBar(
-              title: 'Profile',
-              leftIcon: 'assets/svgs/back.svg',
-              onLeftButtonTap: () => viewModel.leftButton(context),
-              rightIcon: 'assets/svgs/logout.svg',
-              onRightButtonTap: () => viewModel.rightButton(context),
-            ),
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // name and surname
-                  Text(
-                    ' ${viewModel.user.name} ${viewModel.user.surname}',
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // statistics card
-                  Card(
-                    elevation: 4,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Statistics',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // statistics
-                          Text(
-                            'Amount of Plants: ${viewModel.statistics?.plantCount}',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // settings card
-                  Card(
-                    elevation: 4,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Settings',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          // settings
-                          SwitchListTile(
-                            title: const Text("Enable Notifications"),
-                            value: viewModel.notificationsEnabled,
-                            onChanged: (bool value) {
-                              viewModel.enableNotifications(value);
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+          if (viewModel.user == null) {
+            return Scaffold(
+              appBar: TopBar(
+                title: 'Profile',
+                leftIcon: 'assets/svgs/back.svg',
+                onLeftButtonTap: () => viewModel.leftButton(context),
+                showRightButton: false,
               ),
-            ),
-          );
+              body: const Center(child: CircularProgressIndicator()),
+            );
+          } else {
+            return Scaffold(
+              appBar: TopBar(
+                title: 'Profile',
+                leftIcon: 'assets/svgs/back.svg',
+                onLeftButtonTap: () => viewModel.leftButton(context),
+                rightIcon: 'assets/svgs/logout.svg',
+                onRightButtonTap: () => viewModel.rightButton(context),
+              ),
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // name and surname
+                    Text(
+                      ' ${viewModel.user?.name} ${viewModel.user?.surname}',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // statistics card
+                    Card(
+                      elevation: 4,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Statistics',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // statistics
+                            Text(
+                              'Amount of Plants: ${viewModel.statistics?.plantCount}',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // settings card
+                    Card(
+                      elevation: 4,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Settings',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            // settings
+                            SwitchListTile(
+                              title: const Text("Enable Notifications"),
+                              value: viewModel.notificationsEnabled,
+                              onChanged: (bool value) {
+                                viewModel.enableNotifications(value);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
         },
       ),
     );

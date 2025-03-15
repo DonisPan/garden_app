@@ -6,7 +6,7 @@ import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/models/profile.dart';
 
 class ProfileViewModel extends ChangeNotifier {
-  Profile user = Profile(name: '', surname: '');
+  Profile? user;
   final PlantRepository plantRepository;
 
   ProfileViewModel(this.plantRepository) {
@@ -48,17 +48,5 @@ class ProfileViewModel extends ChangeNotifier {
   Future<void> enableNotifications(bool enabled) async {
     notificationsEnabled = enabled;
     notifyListeners();
-  }
-
-  /// Stub: Update profile details.
-  Future<void> updateProfile(String newName, String newSurname) async {
-    user.name = newName;
-    user.surname = newSurname;
-    notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
