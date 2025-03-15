@@ -4,6 +4,7 @@ import 'package:garden_app/services/global.dart';
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/home.dart';
 import 'package:garden_app/views/login.dart';
+import 'package:garden_app/views/profile.dart';
 import 'package:garden_app/views/register.dart';
 
 void main() async {
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/home': (context) => const HomePage(),
         '/register': (context) => const RegisterPage(),
+        '/profile': (context) => const ProfilePage(),
       },
     );
   }
