@@ -1,7 +1,9 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:garden_app/models/plant.dart';
+import 'package:garden_app/models/statistics.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:garden_app/services/global.dart';
+import 'package:garden_app/models/profile.dart';
 
 class SupabaseService {
   static final SupabaseService _instance = SupabaseService._internal();
@@ -92,6 +94,27 @@ class SupabaseService {
     return null;
   }
 
+  Future<Profile> getUser({required int userId}) async {
+    try {
+      final response =
+          await Supabase.instance.client
+              .from('ga_users')
+              .select('name, surname')
+              .eq('id', userId)
+              .maybeSingle();
+
+      final data = response as Map<String, dynamic>;
+
+      return Profile(
+        name: data['name'] as String,
+        surname: data['surname'] as String,
+      );
+    } catch (error) {
+      print('error fetching user: $error');
+      rethrow;
+    }
+  }
+
   Future<List<Plant>> getPlants({required int userId}) async {
     try {
       final response = await Supabase.instance.client
@@ -126,7 +149,22 @@ class SupabaseService {
 
       return plants;
     } catch (error) {
-      print('Error fetching plants: $error');
+      print('error fetching plants: $error');
+      rethrow;
+    }
+  }
+
+  Future<Statistics> getStatistics(int userId) async {
+    try {
+      final response = await Supabase.instance.client
+          .from('ga_user_plants')
+          .select('plant_id')
+          .eq('user_id', userId);
+
+      final data = response as List<dynamic>;
+      return Statistics(parPlantCount: data.length);
+    } catch (error) {
+      print('error fetching statistics: $error');
       rethrow;
     }
   }

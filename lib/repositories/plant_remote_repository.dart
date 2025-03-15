@@ -1,4 +1,5 @@
 import 'package:garden_app/models/plant.dart';
+import 'package:garden_app/models/statistics.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:garden_app/services/supabase_service.dart';
 
@@ -30,5 +31,10 @@ class PlantRemoteRepository implements PlantRepository {
   Future<String?> renamePlant(int id, String newName) {
     // TODO: implement renamePlant
     throw UnimplementedError();
+  }
+
+  @override
+  Future<Statistics?> getStatistics(int userId) {
+    return SupabaseService().getStatistics(userId);
   }
 }

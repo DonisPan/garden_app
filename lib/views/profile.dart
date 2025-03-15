@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:garden_app/repositories/plant_remote_repository.dart';
 import 'package:garden_app/widgets/top_bar.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/profile_viewmodel.dart';
@@ -9,7 +10,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ProfileViewModel>(
-      create: (_) => ProfileViewModel(),
+      create: (_) => ProfileViewModel(PlantRemoteRepository()),
       child: Consumer<ProfileViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
@@ -27,7 +28,7 @@ class ProfilePage extends StatelessWidget {
                 children: [
                   // name and surname
                   Text(
-                    ' ${viewModel.firstName} ${viewModel.surname}',
+                    ' ${viewModel.user.name} ${viewModel.user.surname}',
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -56,7 +57,9 @@ class ProfilePage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           // statistics
-                          Text('Amount of Plants: ${viewModel.plantCount}'),
+                          Text(
+                            'Amount of Plants: ${viewModel.statistics?.plantCount}',
+                          ),
                         ],
                       ),
                     ),
