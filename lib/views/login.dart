@@ -68,11 +68,7 @@ class LoginPage extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         TextButton(
-                          onPressed:
-                              () => Navigator.pushReplacementNamed(
-                                context,
-                                '/home',
-                              ),
+                          onPressed: () => Navigator.pop(context),
                           child: const Text(
                             "Back",
                             style: TextStyle(fontSize: 16, color: Colors.grey),
@@ -80,10 +76,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed:
-                              () => Navigator.pushReplacementNamed(
-                                context,
-                                '/register',
-                              ),
+                              () => Navigator.pushNamed(context, '/register'),
                           child: const Text(
                             "Create an account",
                             style: TextStyle(

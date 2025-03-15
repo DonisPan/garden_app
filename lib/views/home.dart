@@ -18,7 +18,13 @@ class HomePage extends StatelessWidget {
       child: Consumer<HomeViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: TopBar(),
+            appBar: TopBar(
+              title: 'Home',
+              leftIcon: 'assets/svgs/profile.svg',
+              onLeftButtonTap: () => viewModel.leftButton(context),
+              rightIcon: 'assets/svgs/plus.svg',
+              onRightButtonTap: () => viewModel.rightButton(context),
+            ),
             body: Column(
               children: [
                 Container(

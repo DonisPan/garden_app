@@ -25,8 +25,14 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void goToProfilePage(BuildContext context) {
-    Navigator.pushReplacementNamed(context, '/login');
+  void leftButton(BuildContext context) {
+    Global().authorized
+        ? Navigator.pushNamed(context, '/profile')
+        : Navigator.pushNamed(context, '/login');
+  }
+
+  void rightButton(BuildContext context) {
+    // TODO
   }
 
   Future<void> fetchPlants() async {

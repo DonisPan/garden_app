@@ -131,11 +131,7 @@ class RegisterPage extends StatelessWidget {
                       Row(
                         children: [
                           TextButton(
-                            onPressed:
-                                () => Navigator.pushReplacementNamed(
-                                  context,
-                                  '/login',
-                                ),
+                            onPressed: () => Navigator.pop(context),
                             child: const Text(
                               "Back",
                               style: TextStyle(
