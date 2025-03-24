@@ -6,13 +6,14 @@ import 'package:garden_app/services/global.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final PlantRepository plantRepository;
-  final AuthRepository authRepositary;
+  final AuthRepository authRepository;
+
   TextEditingController searchQueryController = TextEditingController();
 
   List<Plant> _plants = [];
   List<Plant> get plants => _plants;
 
-  HomeViewModel(this.plantRepository, this.authRepositary) {
+  HomeViewModel({required this.plantRepository, required this.authRepository}) {
     fetchPlants();
   }
 
@@ -32,7 +33,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   void rightButton(BuildContext context) {
-    // TODO
+    Navigator.pushNamed(context, '/addPlant');
   }
 
   Future<void> fetchPlants() async {

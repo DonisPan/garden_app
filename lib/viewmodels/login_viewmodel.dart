@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  final AuthRepository repository;
-  LoginViewModel(this.repository);
+  final AuthRepository authRepository;
+
+  LoginViewModel({required this.authRepository});
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -24,7 +25,7 @@ class LoginViewModel extends ChangeNotifier {
     _errorMessage = validate(email, password);
 
     if (_errorMessage == null) {
-      String? response = await repository.login(email, password);
+      String? response = await authRepository.login(email, password);
       if (response != null) {
         _errorMessage = response;
       } else {

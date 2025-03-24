@@ -9,7 +9,7 @@ class ProfileViewModel extends ChangeNotifier {
   Profile? user;
   final PlantRepository plantRepository;
 
-  ProfileViewModel(this.plantRepository) {
+  ProfileViewModel({required this.plantRepository}) {
     fetchUser();
     fetchStatistics();
   }

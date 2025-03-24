@@ -4,8 +4,8 @@ import 'package:garden_app/repositories/auth_repository.dart';
 
 class RegisterViewModel extends ChangeNotifier {
   final AuthRepository authRepository;
-  RegisterViewModel(this.authRepository);
-  
+  RegisterViewModel({required this.authRepository});
+
   final TextEditingController nameController = TextEditingController();
   final TextEditingController surnameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -18,7 +18,7 @@ class RegisterViewModel extends ChangeNotifier {
 
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
-  
+
   // update profile picture
   void setProfilePicture(File file) {
     profilePicture = file;
@@ -30,13 +30,15 @@ class RegisterViewModel extends ChangeNotifier {
     if (name.isEmpty || surname.isEmpty || email.isEmpty || password.isEmpty) {
       return "All fields are required.";
     }
-    if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$").hasMatch(email)) {
+    if (!RegExp(
+      r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+    ).hasMatch(email)) {
       return "Invalid email format.";
     }
     return null;
   }
 
-  Future<void> register(BuildContext context) async{
+  Future<void> register(BuildContext context) async {
     _errorMessage = null;
     _isLoading = true;
     notifyListeners();
@@ -45,15 +47,20 @@ class RegisterViewModel extends ChangeNotifier {
     final surname = surnameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
-    
+
     _errorMessage = validate(name, surname, email, password);
     if (_errorMessage != null) {
       _isLoading = false;
       notifyListeners();
-      return;    
+      return;
     }
 
-    final String? response = await authRepository.register(email, password, name, surname);
+    final String? response = await authRepository.register(
+      email,
+      password,
+      name,
+      surname,
+    );
     if (response != null) {
       _errorMessage = response;
     } else {

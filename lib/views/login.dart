@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:garden_app/repositories/auth_remote_repository.dart';
+import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:garden_app/viewmodels/login_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -9,7 +9,10 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(AuthRemoteRepository()),
+      create:
+          (_) => LoginViewModel(
+            authRepository: Provider.of<AuthRepository>(context, listen: false),
+          ),
       child: Consumer<LoginViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(

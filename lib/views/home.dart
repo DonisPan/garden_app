@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:garden_app/repositories/auth_remote_repository.dart';
-import 'package:garden_app/repositories/plant_remote_repository.dart';
+import 'package:garden_app/repositories/auth_repository.dart';
+import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:garden_app/widgets/top_bar.dart';
 import '../viewmodels/home_viewmodel.dart';
@@ -14,7 +14,13 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<HomeViewModel>(
       create:
-          (_) => HomeViewModel(PlantRemoteRepository(), AuthRemoteRepository()),
+          (_) => HomeViewModel(
+            plantRepository: Provider.of<PlantRepository>(
+              context,
+              listen: false,
+            ),
+            authRepository: Provider.of<AuthRepository>(context, listen: false),
+          ),
       child: Consumer<HomeViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(

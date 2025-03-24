@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:garden_app/repositories/auth_remote_repository.dart';
+import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -28,7 +29,10 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => RegisterViewModel(AuthRemoteRepository()),
+      create:
+          (_) => RegisterViewModel(
+            authRepository: Provider.of<AuthRepository>(context, listen: false),
+          ),
       child: Consumer<RegisterViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
