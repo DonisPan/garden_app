@@ -120,7 +120,7 @@ class SupabaseService {
     try {
       final response = await Supabase.instance.client
           .from('ga_user_plants')
-          .select('name, plant_id:ga_plant(*, plant_family(*))')
+          .select('name, plant_id:ga_plant(*, plant_family(*), plant_class(*))')
           .eq('user_id', userId);
 
       final data = response as List<dynamic>;
@@ -130,6 +130,7 @@ class SupabaseService {
             final plantData = row['plant_id'] as Map<String, dynamic>;
             final familyData =
                 plantData['plant_family'] as Map<String, dynamic>?;
+            final classData = plantData['plant_class'] as Map<String, dynamic>?;
 
             return Plant(
               id: plantData['id'] as int,
@@ -137,7 +138,7 @@ class SupabaseService {
                   row['name'] as String? ??
                   (plantData['name'] as String? ?? 'Name missing!'),
               note: plantData['note'] as String?,
-              plantClass: plantData['class'] as String? ?? 'Class missing!',
+              plantClass: classData?['class'] as String? ?? 'Class missing!',
               familyCommon:
                   familyData?['name_common'] as String? ??
                   'Family common missing!',
