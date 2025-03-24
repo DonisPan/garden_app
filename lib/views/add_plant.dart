@@ -4,7 +4,7 @@ import 'package:garden_app/viewmodels/add_plant_viewmodel.dart';
 import 'package:garden_app/repositories/plant_remote_repository.dart';
 
 class AddPlantPage extends StatelessWidget {
-  const AddPlantPage({super.key});
+  const AddPlantPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +33,45 @@ class AddPlantPage extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  _buildTextField(viewModel.nameController, "Name *"),
+                  // Name field: Dropdown if not custom, text field if custom.
+                  viewModel.isCustom
+                      ? _buildTextField(
+                        viewModel.customNameController,
+                        "Name *",
+                      )
+                      : _buildDropdown(
+                        label: "Name",
+                        value: viewModel.selectedPlantName,
+                        items: viewModel.plantNames,
+                        onChanged: (String? newValue) {
+                          viewModel.selectedPlantName = newValue;
+                          viewModel.notifyListeners();
+                        },
+                      ),
                   const SizedBox(height: 10),
+                  // Note field
                   _buildTextField(viewModel.noteController, "Note (optional)"),
                   const SizedBox(height: 10),
-                  _buildTextField(
-                    viewModel.plantClassController,
-                    "Plant Class *",
+                  // Plant Class Dropdown (customized)
+                  _buildDropdown(
+                    label: "Plant Class *",
+                    value: viewModel.selectedPlantClass,
+                    items: viewModel.plantClasses,
+                    onChanged: (String? newValue) {
+                      viewModel.selectedPlantClass = newValue;
+                      viewModel.notifyListeners();
+                    },
                   ),
                   const SizedBox(height: 10),
-                  _buildTextField(
-                    viewModel.familyCommonController,
-                    "Family Common *",
-                  ),
-                  const SizedBox(height: 10),
-                  _buildTextField(
-                    viewModel.familyScientificController,
-                    "Family Scientific *",
+                  // Family Dropdown (combined common & scientific)
+                  _buildDropdown(
+                    label: "Family (Common & Scientific) *",
+                    value: viewModel.selectedFamily,
+                    items: viewModel.families,
+                    onChanged: (String? newValue) {
+                      viewModel.selectedFamily = newValue;
+                      viewModel.notifyListeners();
+                    },
                   ),
                   const SizedBox(height: 10),
                   // Custom plant checkbox
@@ -116,6 +138,7 @@ class AddPlantPage extends StatelessWidget {
     );
   }
 
+  // Reusable text field builder.
   Widget _buildTextField(TextEditingController controller, String label) {
     return Container(
       margin: const EdgeInsets.only(top: 5),
@@ -140,6 +163,49 @@ class AddPlantPage extends StatelessWidget {
             borderSide: BorderSide.none,
           ),
         ),
+      ),
+    );
+  }
+
+  // Reusable dropdown builder.
+  Widget _buildDropdown({
+    required String label,
+    required String? value,
+    required List<String> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(255, 216, 216, 216),
+            blurRadius: 30,
+            spreadRadius: 0.0,
+          ),
+        ],
+      ),
+      child: DropdownButtonFormField<String>(
+        value: value,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.all(10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        items:
+            items.map((option) {
+              return DropdownMenuItem<String>(
+                value: option,
+                child: Text(option),
+              );
+            }).toList(),
+        onChanged: onChanged,
+        isExpanded: true,
       ),
     );
   }

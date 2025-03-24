@@ -37,4 +37,10 @@ class PlantRemoteRepository implements PlantRepository {
   Future<Statistics?> getStatistics(int userId) {
     return SupabaseService().getStatistics(userId);
   }
+
+  @override
+  Future<String?> addPlant(Plant plant) {
+    // TODO: implement addPlant
+    throw UnimplementedError();
+  }
 }

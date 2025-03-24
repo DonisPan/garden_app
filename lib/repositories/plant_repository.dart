@@ -8,4 +8,5 @@ abstract class PlantRepository {
   Future<String?> changeFamily(int id, String newFamily);
   Future<String?> removePlant(int id);
   Future<Statistics?> getStatistics(int userId);
+  Future<String?> addPlant(Plant plant);
 }
