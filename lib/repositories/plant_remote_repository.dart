@@ -22,6 +22,11 @@ class PlantRemoteRepository implements PlantRepository {
   }
 
   @override
+  Future<List<Plant>> getAllPlants() {
+    return SupabaseService().getAllPlants();
+  }
+
+  @override
   Future<String?> removePlant(int id) {
     // TODO: implement removePlant
     throw UnimplementedError();
@@ -42,5 +47,15 @@ class PlantRemoteRepository implements PlantRepository {
   Future<String?> addPlant(Plant plant) {
     // TODO: implement addPlant
     throw UnimplementedError();
+  }
+
+  @override
+  Future<List<PlantClass>> getAllClasses() {
+    return SupabaseService().getClasses();
+  }
+
+  @override
+  Future<List<PlantFamily>> getAllFamilies() {
+    return SupabaseService().getFamilies();
   }
 }

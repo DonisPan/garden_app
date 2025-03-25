@@ -128,9 +128,9 @@ class SupabaseService {
       final plants =
           data.map((row) {
             final plantData = row['plant_id'] as Map<String, dynamic>;
+            final classData = plantData['plant_class'] as Map<String, dynamic>?;
             final familyData =
                 plantData['plant_family'] as Map<String, dynamic>?;
-            final classData = plantData['plant_class'] as Map<String, dynamic>?;
 
             return Plant(
               id: plantData['id'] as int,
@@ -138,13 +138,21 @@ class SupabaseService {
                   row['name'] as String? ??
                   (plantData['name'] as String? ?? 'Name missing!'),
               note: plantData['note'] as String?,
-              plantClass: classData?['class'] as String? ?? 'Class missing!',
-              familyCommon:
-                  familyData?['name_common'] as String? ??
-                  'Family common missing!',
-              familyScientific:
-                  familyData?['name_scientific'] as String? ??
-                  'Family scientfic missing!',
+              plantClass:
+                  classData != null
+                      ? PlantClass(
+                        id: classData['id'] as int,
+                        name: classData['name'],
+                      )
+                      : null,
+              plantFamily:
+                  familyData != null
+                      ? PlantFamily(
+                        id: familyData['id'],
+                        nameCommon: familyData['name_common'],
+                        nameScientific: familyData['name_scientific'],
+                      )
+                      : null,
               isCustom: plantData['is_custom'] as bool,
             );
           }).toList();
@@ -167,6 +175,97 @@ class SupabaseService {
       return Statistics(parPlantCount: data.length);
     } catch (error) {
       print('error fetching statistics: $error');
+      rethrow;
+    }
+  }
+
+  Future<List<Plant>> getAllPlants() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('ga_plant')
+          .select('*, plant_family(*), plant_class(*)')
+          .eq('is_custom', false);
+
+      final data = response as List<dynamic>;
+
+      final plants =
+          data.map((row) {
+            final classData = row['plant_class'] as Map<String, dynamic>?;
+            final familyData = row['plant_family'] as Map<String, dynamic>?;
+
+            return Plant(
+              id: row['id'] as int,
+              name: row['name'] as String,
+              note: row['note'] as String?,
+              plantClass:
+                  classData != null
+                      ? PlantClass(
+                        id: classData['id'] as int,
+                        name: classData['name'],
+                      )
+                      : null,
+              plantFamily:
+                  familyData != null
+                      ? PlantFamily(
+                        id: familyData['id'],
+                        nameCommon: familyData['name_common'],
+                        nameScientific: familyData['name_scientific'],
+                      )
+                      : null,
+              isCustom: row['is_custom'] as bool,
+            );
+          }).toList();
+
+      return plants;
+    } catch (error) {
+      print('error fetching plants: $error');
+      rethrow;
+    }
+  }
+
+  Future<List<PlantClass>> getClasses() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('plant_class')
+          .select('*');
+
+      final data = response as List<dynamic>;
+
+      final classes =
+          data.map((row) {
+            return PlantClass(
+              id: row['id'] as int,
+              name: row['name'] as String,
+            );
+          }).toList();
+
+      return classes;
+    } catch (error) {
+      print('error fetching classes: $error');
+      rethrow;
+    }
+  }
+
+  Future<List<PlantFamily>> getFamilies() async {
+    try {
+      final response = await Supabase.instance.client
+          .from('plant_family')
+          .select('*');
+
+      final data = response as List<dynamic>;
+
+      final families =
+          data.map((row) {
+            return PlantFamily(
+              id: row['id'] as int,
+              nameCommon: row['name_common'] as String,
+              nameScientific: row['name_scientific'] as String,
+            );
+          }).toList();
+
+      return families;
+    } catch (error) {
+      print('error fetching classes: $error');
       rethrow;
     }
   }
