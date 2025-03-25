@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:garden_app/models/plant.dart';
+import 'package:garden_app/widgets/top_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:garden_app/viewmodels/add_plant_viewmodel.dart';
 import 'package:garden_app/repositories/plant_remote_repository.dart';
 
 class AddPlantPage extends StatelessWidget {
-  const AddPlantPage({Key? key}) : super(key: key);
+  const AddPlantPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +16,11 @@ class AddPlantPage extends StatelessWidget {
       child: Consumer<AddPlantViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: AppBar(
-              title: const Text("Add Plant"),
-              backgroundColor: Colors.white,
-              elevation: 0.0,
+            appBar: TopBar(
+              title: 'Add plant',
+              leftIcon: 'assets/svgs/back.svg',
+              onLeftButtonTap: () => viewModel.leftButton(context),
+              showRightButton: false,
             ),
             body: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -33,48 +36,72 @@ class AddPlantPage extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  // Name field: Dropdown if not custom, text field if custom.
+                  // name field or dropdown
                   viewModel.isCustom
                       ? _buildTextField(
                         viewModel.customNameController,
-                        "Name *",
+                        "Enter your custom plant name",
                       )
-                      : _buildDropdown(
-                        label: "Name",
-                        value: viewModel.selectedPlantName,
-                        items: viewModel.plantNames,
-                        onChanged: (String? newValue) {
-                          viewModel.selectedPlantName = newValue;
+                      : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildPlantDropdown(
+                            label: "Choose or make a custom plant",
+                            value: viewModel.selectedPlant,
+                            items: viewModel.plants,
+                            onChanged: (Plant? newValue) {
+                              viewModel.selectedPlant = newValue;
+                              viewModel.notifyListeners();
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          _buildTextField(
+                            viewModel.customNameController,
+                            "Enter your custom plant name",
+                          ),
+                        ],
+                      ),
+
+                  const SizedBox(height: 10),
+                  // note field
+                  viewModel.isCustom
+                      ? _buildTextField(
+                        viewModel.noteController,
+                        "Note (optional)",
+                      )
+                      : _buildLabel(viewModel.selectedPlant?.note),
+
+                  const SizedBox(height: 10),
+                  // plant class dropdown
+                  viewModel.isCustom
+                      ? _buildClassDropdown(
+                        label: "Plant Class",
+                        value: viewModel.selectedPlantClass,
+                        items: viewModel.classes,
+                        onChanged: (PlantClass? newValue) {
+                          viewModel.selectedPlantClass = newValue;
                           viewModel.notifyListeners();
                         },
+                      )
+                      : _buildLabel(viewModel.selectedPlant?.plantClass?.name),
+
+                  const SizedBox(height: 10),
+                  // family dropdown
+                  viewModel.isCustom
+                      ? _buildFamilyDropdown(
+                        label: "Family (Common & Scientific)",
+                        value: viewModel.selectedPlantFamily,
+                        items: viewModel.families,
+                        onChanged: (PlantFamily? newValue) {
+                          viewModel.selectedPlantFamily = newValue;
+                          viewModel.notifyListeners();
+                        },
+                      )
+                      : _buildLabel(
+                        "${viewModel.selectedPlant?.plantFamily?.nameCommon ?? ''} | ${viewModel.selectedPlant?.plantFamily?.nameScientific ?? ''}",
                       ),
                   const SizedBox(height: 10),
-                  // Note field
-                  _buildTextField(viewModel.noteController, "Note (optional)"),
-                  const SizedBox(height: 10),
-                  // Plant Class Dropdown (customized)
-                  _buildDropdown(
-                    label: "Plant Class *",
-                    value: viewModel.selectedPlantClass,
-                    items: viewModel.plantClasses,
-                    onChanged: (String? newValue) {
-                      viewModel.selectedPlantClass = newValue;
-                      viewModel.notifyListeners();
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  // Family Dropdown (combined common & scientific)
-                  _buildDropdown(
-                    label: "Family (Common & Scientific) *",
-                    value: viewModel.selectedFamily,
-                    items: viewModel.families,
-                    onChanged: (String? newValue) {
-                      viewModel.selectedFamily = newValue;
-                      viewModel.notifyListeners();
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  // Custom plant checkbox
+                  // custom plant check box
                   Row(
                     children: [
                       Checkbox(
@@ -89,22 +116,8 @@ class AddPlantPage extends StatelessWidget {
                       const Text("Custom Plant"),
                     ],
                   ),
-                  // Need water switch
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("Needs Water"),
-                      Switch(
-                        value: viewModel.needWater,
-                        onChanged: (bool value) {
-                          viewModel.needWater = value;
-                          viewModel.notifyListeners();
-                        },
-                      ),
-                    ],
-                  ),
                   const SizedBox(height: 20),
-                  // Submit button
+                  // add plant button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -138,8 +151,21 @@ class AddPlantPage extends StatelessWidget {
     );
   }
 
-  // Reusable text field builder.
-  Widget _buildTextField(TextEditingController controller, String label) {
+  Widget _buildTextField(TextEditingController controller, String? label) {
+    Widget textField = TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.all(10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+
     return Container(
       margin: const EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
@@ -151,28 +177,47 @@ class AddPlantPage extends StatelessWidget {
           ),
         ],
       ),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
+      child: textField,
     );
   }
 
-  // Reusable dropdown builder.
-  Widget _buildDropdown({
+  Widget _buildLabel(String? label) {
+    Widget textField = TextField(
+      readOnly: true,
+      decoration: InputDecoration(
+        labelText: label,
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.all(10),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+
+    textField = IgnorePointer(child: textField);
+
+    return Container(
+      margin: const EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(255, 216, 216, 216),
+            blurRadius: 30,
+            spreadRadius: 0.0,
+          ),
+        ],
+      ),
+      child: textField,
+    );
+  }
+
+  Widget _buildPlantDropdown({
     required String label,
-    required String? value,
-    required List<String> items,
-    required ValueChanged<String?> onChanged,
+    required Plant? value,
+    required List<Plant> items,
+    required ValueChanged<Plant?> onChanged,
   }) {
     return Container(
       margin: const EdgeInsets.only(top: 5),
@@ -185,7 +230,7 @@ class AddPlantPage extends StatelessWidget {
           ),
         ],
       ),
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<Plant>(
         value: value,
         decoration: InputDecoration(
           labelText: label,
@@ -199,9 +244,93 @@ class AddPlantPage extends StatelessWidget {
         ),
         items:
             items.map((option) {
-              return DropdownMenuItem<String>(
+              return DropdownMenuItem<Plant>(
                 value: option,
-                child: Text(option),
+                child: Text(option.name),
+              );
+            }).toList(),
+        onChanged: onChanged,
+        isExpanded: true,
+      ),
+    );
+  }
+
+  Widget _buildClassDropdown({
+    required String label,
+    required PlantClass? value,
+    required List<PlantClass> items,
+    required ValueChanged<PlantClass?> onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(255, 216, 216, 216),
+            blurRadius: 30,
+            spreadRadius: 0.0,
+          ),
+        ],
+      ),
+      child: DropdownButtonFormField<PlantClass>(
+        value: value,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.all(10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        items:
+            items.map((option) {
+              return DropdownMenuItem<PlantClass>(
+                value: option,
+                child: Text(option.name!),
+              );
+            }).toList(),
+        onChanged: onChanged,
+        isExpanded: true,
+      ),
+    );
+  }
+
+  Widget _buildFamilyDropdown({
+    required String label,
+    required PlantFamily? value,
+    required List<PlantFamily> items,
+    required ValueChanged<PlantFamily?> onChanged,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(top: 5),
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(255, 216, 216, 216),
+            blurRadius: 30,
+            spreadRadius: 0.0,
+          ),
+        ],
+      ),
+      child: DropdownButtonFormField<PlantFamily>(
+        value: value,
+        decoration: InputDecoration(
+          labelText: label,
+          filled: true,
+          fillColor: Colors.white,
+          contentPadding: const EdgeInsets.all(10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        items:
+            items.map((option) {
+              return DropdownMenuItem<PlantFamily>(
+                value: option,
+                child: Text(option.nameCommon!),
               );
             }).toList(),
         onChanged: onChanged,
