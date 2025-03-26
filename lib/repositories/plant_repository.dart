@@ -8,7 +8,14 @@ abstract class PlantRepository {
 
   Future<List<Plant>> getPlants(int userId);
   Future<String?> renamePlant(int id, String newName);
-  Future<String?> addPlant(Plant plant);
+  Future<void> addPlant(int id, String? customName);
+  Future<String?> addCustomPlant(
+    String name,
+    String? note,
+    int? plantClass,
+    int? plantFamily,
+    bool isCustom,
+  );
   Future<String?> removePlant(int id);
 
   Future<String?> changeClass(int id, String newClass);

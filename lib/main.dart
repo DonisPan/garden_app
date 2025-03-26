@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Garden App',
       theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
-      home: HomePage(),
+      home: Global.isAuthorized() ? HomePage() : LoginPage(),
       routes: {
         '/home': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),

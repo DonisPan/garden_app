@@ -38,7 +38,16 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addPlant() async {}
+  Future<void> addPlant() async {
+    if (!isCustom && selectedPlant != null) {
+      print('Calling in viewmodel');
+      await plantRepository.addPlant(
+        selectedPlant!.id,
+        customNameController.text,
+      );
+    }
+    notifyListeners();
+  }
 
   @override
   void dispose() {

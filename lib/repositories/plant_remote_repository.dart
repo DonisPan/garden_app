@@ -44,12 +44,6 @@ class PlantRemoteRepository implements PlantRepository {
   }
 
   @override
-  Future<String?> addPlant(Plant plant) {
-    // TODO: implement addPlant
-    throw UnimplementedError();
-  }
-
-  @override
   Future<List<PlantClass>> getAllClasses() {
     return SupabaseService().getClasses();
   }
@@ -57,5 +51,23 @@ class PlantRemoteRepository implements PlantRepository {
   @override
   Future<List<PlantFamily>> getAllFamilies() {
     return SupabaseService().getFamilies();
+  }
+
+  @override
+  Future<String?> addCustomPlant(
+    String name,
+    String? note,
+    int? plantClass,
+    int? plantFamily,
+    bool isCustom,
+  ) {
+    // TODO: implement addCustomPlant
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> addPlant(int id, String? customName) async {
+    print('Calling in remote repository');
+    await SupabaseService().addPlant(customName, id: id);
   }
 }

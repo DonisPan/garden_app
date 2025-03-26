@@ -24,8 +24,14 @@ class SupabaseService {
     final id = await Global().getUserId();
     print('Session: $session, id: $id');
     if (session != null) {
-      await Supabase.instance.client.auth.setSession(session);
-      Global.authorize();
+      try {
+        await Supabase.instance.client.auth.setSession(session);
+        Global.authorize();
+      } catch (error) {
+        print('Error setting session: $error');
+        await Global().delUserSession();
+        Global.unAuthorize();
+      }
     }
   }
 
@@ -267,6 +273,21 @@ class SupabaseService {
     } catch (error) {
       print('error fetching classes: $error');
       rethrow;
+    }
+  }
+
+  Future<String?> addPlant(String? name, {required id}) async {
+    final userId = await Global().getUserId();
+    if (name == '') {
+      name = null;
+    }
+    try {
+      final response = await Supabase.instance.client
+          .from('ga_user_plants')
+          .insert({'user_id': userId, 'plant_id': id, 'name': name});
+      return response.toString();
+    } catch (error) {
+      return error.toString();
     }
   }
 }
