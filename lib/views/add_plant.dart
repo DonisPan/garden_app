@@ -17,9 +17,10 @@ class AddPlantPage extends StatelessWidget {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: TopBar(
-              title: 'Add plant',
+              title: "Add Plant",
               leftIcon: 'assets/svgs/back.svg',
-              onLeftButtonTap: () => viewModel.leftButton(context),
+              onLeftButtonTap: () => Navigator.pop(context),
+              // You can set a right icon and its action if needed.
               showRightButton: false,
             ),
             body: SingleChildScrollView(
@@ -36,19 +37,21 @@ class AddPlantPage extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  // name field or dropdown
+                  // Name field: dropdown if not custom, text field if custom.
                   viewModel.isCustom
                       ? _buildTextField(
-                        viewModel.customNameController,
-                        "Enter your custom plant name",
+                        controller: viewModel.customNameController,
+                        label: "Enter your custom plant name",
+                        readOnly: false,
                       )
                       : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _buildPlantDropdown(
-                            label: "Choose or make a custom plant",
+                          _buildDropdown<Plant>(
+                            label: "Choose plant",
                             value: viewModel.selectedPlant,
                             items: viewModel.plants,
+                            getItemLabel: (plant) => plant.name,
                             onChanged: (Plant? newValue) {
                               viewModel.selectedPlant = newValue;
                               viewModel.notifyListeners();
@@ -56,52 +59,72 @@ class AddPlantPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 10),
                           _buildTextField(
-                            viewModel.customNameController,
-                            "Enter your custom plant name",
+                            controller: viewModel.customNameController,
+                            label: "Or enter your custom plant name",
+                            readOnly: false,
                           ),
                         ],
                       ),
-
                   const SizedBox(height: 10),
-                  // note field
+                  // Note field: editable for custom, auto-filled and read-only otherwise.
                   viewModel.isCustom
                       ? _buildTextField(
-                        viewModel.noteController,
-                        "Note (optional)",
+                        controller: viewModel.noteController,
+                        label: "Note (optional)",
+                        readOnly: false,
                       )
-                      : _buildLabel(viewModel.selectedPlant?.note),
-
+                      : _buildTextField(
+                        controller: TextEditingController(
+                          text: viewModel.selectedPlant?.note,
+                        ),
+                        label: "Note (auto-filled)",
+                        readOnly: true,
+                      ),
                   const SizedBox(height: 10),
-                  // plant class dropdown
+                  // Plant Class: dropdown for custom, label for non-custom.
                   viewModel.isCustom
-                      ? _buildClassDropdown(
+                      ? _buildDropdown<PlantClass>(
                         label: "Plant Class",
                         value: viewModel.selectedPlantClass,
                         items: viewModel.classes,
+                        getItemLabel: (pc) => pc.name ?? '',
                         onChanged: (PlantClass? newValue) {
                           viewModel.selectedPlantClass = newValue;
                           viewModel.notifyListeners();
                         },
                       )
-                      : _buildLabel(viewModel.selectedPlant?.plantClass?.name),
-
+                      : _buildTextField(
+                        controller: TextEditingController(
+                          text: viewModel.selectedPlant?.plantClass?.name ?? '',
+                        ),
+                        label: "Plant Class",
+                        readOnly: true,
+                      ),
                   const SizedBox(height: 10),
-                  // family dropdown
+                  // Family: dropdown for custom, label for non-custom.
                   viewModel.isCustom
-                      ? _buildFamilyDropdown(
+                      ? _buildDropdown<PlantFamily>(
                         label: "Family (Common & Scientific)",
                         value: viewModel.selectedPlantFamily,
                         items: viewModel.families,
+                        getItemLabel: (pf) => pf.nameCommon ?? '',
                         onChanged: (PlantFamily? newValue) {
                           viewModel.selectedPlantFamily = newValue;
                           viewModel.notifyListeners();
                         },
                       )
-                      : _buildLabel(
-                        "${viewModel.selectedPlant?.plantFamily?.nameCommon ?? ''} | ${viewModel.selectedPlant?.plantFamily?.nameScientific ?? ''}",
+                      : _buildTextField(
+                        controller: TextEditingController(
+                          text:
+                              viewModel.selectedPlant != null
+                                  ? "${viewModel.selectedPlant?.plantFamily?.nameCommon ?? ''} | ${viewModel.selectedPlant?.plantFamily?.nameScientific ?? ''}"
+                                  : "",
+                        ),
+                        label: "Family (Common & Scientific)",
+                        readOnly: true,
                       ),
                   const SizedBox(height: 10),
-                  // custom plant check box
+                  // Custom plant checkbox
                   Row(
                     children: [
                       Checkbox(
@@ -113,11 +136,14 @@ class AddPlantPage extends StatelessWidget {
                           }
                         },
                       ),
-                      const Text("Custom Plant"),
+                      const Text(
+                        "Custom Plant",
+                        style: TextStyle(color: Colors.black),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // add plant button
+                  // Add Plant button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -126,6 +152,7 @@ class AddPlantPage extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15),
                         ),
+                        backgroundColor: Colors.black,
                       ),
                       onPressed:
                           viewModel.isLoading
@@ -138,7 +165,10 @@ class AddPlantPage extends StatelessWidget {
                               )
                               : const Text(
                                 "Add Plant",
-                                style: TextStyle(fontSize: 16),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
                               ),
                     ),
                   ),
@@ -151,190 +181,88 @@ class AddPlantPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String? label) {
-    Widget textField = TextField(
+  // Reusable text field builder
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String? label,
+    bool readOnly = false,
+  }) {
+    final textField = TextField(
       controller: controller,
+      readOnly: readOnly,
+      style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: const TextStyle(color: Colors.black),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.all(10),
+        contentPadding: const EdgeInsets.all(12),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.black, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.black, width: 2),
+        ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+          borderSide: const BorderSide(color: Colors.black, width: 2),
         ),
       ),
     );
 
     return Container(
-      margin: const EdgeInsets.only(top: 5),
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
-      child: textField,
+      margin: const EdgeInsets.only(top: 8),
+      child: readOnly ? IgnorePointer(child: textField) : textField,
     );
   }
 
-  Widget _buildLabel(String? label) {
-    Widget textField = TextField(
-      readOnly: true,
-      decoration: InputDecoration(
-        labelText: label,
-        filled: true,
-        fillColor: Colors.white,
-        contentPadding: const EdgeInsets.all(10),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
-
-    textField = IgnorePointer(child: textField);
-
-    return Container(
-      margin: const EdgeInsets.only(top: 5),
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
-      child: textField,
-    );
-  }
-
-  Widget _buildPlantDropdown({
+  // Reusable dropdown builder
+  Widget _buildDropdown<T>({
     required String label,
-    required Plant? value,
-    required List<Plant> items,
-    required ValueChanged<Plant?> onChanged,
+    required T? value,
+    required List<T> items,
+    required String Function(T) getItemLabel,
+    required ValueChanged<T?> onChanged,
   }) {
     return Container(
-      margin: const EdgeInsets.only(top: 5),
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
-      child: DropdownButtonFormField<Plant>(
+      margin: const EdgeInsets.only(top: 8),
+      child: DropdownButtonFormField<T>(
         value: value,
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: const TextStyle(color: Colors.black),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(10),
+          contentPadding: const EdgeInsets.all(12),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.black, width: 2),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.black, width: 2),
+          ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.black, width: 2),
           ),
         ),
         items:
             items.map((option) {
-              return DropdownMenuItem<Plant>(
+              return DropdownMenuItem<T>(
                 value: option,
-                child: Text(option.name),
+                child: Text(
+                  getItemLabel(option),
+                  style: const TextStyle(color: Colors.black),
+                ),
               );
             }).toList(),
         onChanged: onChanged,
         isExpanded: true,
-      ),
-    );
-  }
-
-  Widget _buildClassDropdown({
-    required String label,
-    required PlantClass? value,
-    required List<PlantClass> items,
-    required ValueChanged<PlantClass?> onChanged,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(top: 5),
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
-      child: DropdownButtonFormField<PlantClass>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        items:
-            items.map((option) {
-              return DropdownMenuItem<PlantClass>(
-                value: option,
-                child: Text(option.name!),
-              );
-            }).toList(),
-        onChanged: onChanged,
-        isExpanded: true,
-      ),
-    );
-  }
-
-  Widget _buildFamilyDropdown({
-    required String label,
-    required PlantFamily? value,
-    required List<PlantFamily> items,
-    required ValueChanged<PlantFamily?> onChanged,
-  }) {
-    return Container(
-      margin: const EdgeInsets.only(top: 5),
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
-      child: DropdownButtonFormField<PlantFamily>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(10),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        items:
-            items.map((option) {
-              return DropdownMenuItem<PlantFamily>(
-                value: option,
-                child: Text(option.nameCommon!),
-              );
-            }).toList(),
-        onChanged: onChanged,
-        isExpanded: true,
+        style: const TextStyle(color: Colors.black),
+        dropdownColor: Colors.white,
       ),
     );
   }

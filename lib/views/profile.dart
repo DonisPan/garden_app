@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:garden_app/repositories/plant_remote_repository.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:garden_app/widgets/top_bar.dart';
 import 'package:provider/provider.dart';
@@ -44,22 +43,23 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // name and surname
+                    // Name and surname
                     Text(
-                      ' ${viewModel.user?.name} ${viewModel.user?.surname}',
+                      '${viewModel.user?.name} ${viewModel.user?.surname}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // statistics card
+                    // Statistics card
                     Card(
                       elevation: 4,
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.black, width: 2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -71,25 +71,26 @@ class ProfilePage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // statistics
                             Text(
-                              'Amount of Plants: ${viewModel.statistics?.plantCount}',
+                              'Amount of Plants: ${viewModel.statistics?.plantCount ?? 0}',
+                              style: const TextStyle(color: Colors.black),
                             ),
                           ],
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-
-                    // settings card
+                    // Settings card
                     Card(
                       elevation: 4,
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.black, width: 2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -101,16 +102,22 @@ class ProfilePage extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // settings
                             SwitchListTile(
-                              title: const Text("Enable Notifications"),
+                              title: const Text(
+                                "Enable Notifications",
+                                style: TextStyle(color: Colors.black),
+                              ),
                               value: viewModel.notificationsEnabled,
                               onChanged: (bool value) {
                                 viewModel.enableNotifications(value);
                               },
+                              activeColor: Colors.black,
+                              inactiveThumbColor: Colors.grey,
+                              inactiveTrackColor: Colors.grey.shade300,
                             ),
                           ],
                         ),

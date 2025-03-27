@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
-import 'package:provider/provider.dart';
+import 'package:garden_app/viewmodels/home_viewmodel.dart';
 import 'package:garden_app/widgets/top_bar.dart';
-import '../viewmodels/home_viewmodel.dart';
-import '../models/plant.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -33,33 +33,26 @@ class HomePage extends StatelessWidget {
             ),
             body: Column(
               children: [
+                // Search field
                 Container(
-                  margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color.fromARGB(255, 216, 216, 216),
-                        blurRadius: 30,
-                        spreadRadius: 0.0,
-                      ),
-                    ],
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
                   ),
                   child: TextField(
                     controller: viewModel.searchQueryController,
                     decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      contentPadding: const EdgeInsets.all(10),
                       hintText: "Search for your plant...",
                       hintStyle: const TextStyle(
-                        color: Color.fromARGB(255, 216, 216, 216),
                         fontSize: 14,
+                        color: Colors.black54,
                       ),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(12),
                         child: SvgPicture.asset(
                           'assets/svgs/magnifier.svg',
                           height: 15,
+                          color: Colors.black,
                         ),
                       ),
                       suffixIcon: SizedBox(
@@ -69,65 +62,85 @@ class HomePage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               const VerticalDivider(
-                                color: Color.fromARGB(255, 216, 216, 216),
+                                color: Colors.black,
                                 indent: 10,
                                 endIndent: 10,
-                                thickness: 0.5,
+                                thickness: 2,
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(12),
                                 child: SvgPicture.asset(
                                   'assets/svgs/filters.svg',
                                   height: 20,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
-                      border: OutlineInputBorder(
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.all(12),
+                      enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
-                        borderSide: BorderSide.none,
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                          width: 2,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                          width: 2,
+                        ),
                       ),
                     ),
                     onChanged: viewModel.updateSearchQuery,
+                    style: const TextStyle(color: Colors.black),
                   ),
                 ),
                 const SizedBox(height: 20),
-                // plants list
+                // Plants list
                 Expanded(
                   child:
                       viewModel.plants.isEmpty
-                          ? const Center(child: Text("No plants found."))
+                          ? const Center(
+                            child: Text(
+                              "No plants found.",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          )
                           : ListView.builder(
                             itemCount: viewModel.plants.length,
                             itemBuilder: (context, index) {
                               final Plant plant = viewModel.plants[index];
                               return Padding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 5,
-                                  vertical: 5,
+                                  horizontal: 8,
+                                  vertical: 8,
                                 ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(
+                                      color: Colors.black,
+                                      width: 2,
+                                    ),
                                     boxShadow: const [
                                       BoxShadow(
-                                        color: Color.fromARGB(
-                                          255,
-                                          216,
-                                          216,
-                                          216,
-                                        ),
-                                        blurRadius: 30,
-                                        spreadRadius: 0.0,
+                                        color: Colors.black12,
+                                        blurRadius: 8,
+                                        spreadRadius: 0,
+                                        offset: Offset(0, 2),
                                       ),
                                     ],
                                   ),
                                   child: Row(
                                     children: [
-                                      // main button
+                                      // Main button for plant name
                                       Expanded(
                                         child: TextButton(
                                           style: TextButton.styleFrom(
@@ -135,7 +148,7 @@ class HomePage extends StatelessWidget {
                                             alignment: Alignment.centerLeft,
                                           ),
                                           onPressed: () {
-                                            // TODO
+                                            // TODO: Implement action (e.g., show plant details)
                                           },
                                           child: Text(
                                             plant.name,
@@ -146,17 +159,18 @@ class HomePage extends StatelessWidget {
                                           ),
                                         ),
                                       ),
-                                      // watter button
+                                      // Water button
                                       IconButton(
                                         onPressed: () {
-                                          // TODO
                                           viewModel.water(plant);
                                         },
                                         icon: const Icon(Icons.water_drop),
                                         color:
                                             plant.needWater
-                                                ? Colors.blueAccent
+                                                ? Colors.black
                                                 : Colors.black,
+                                        // Alternatively, if you want a distinct color when watering:
+                                        // color: plant.needWater ? Colors.blue : Colors.black,
                                       ),
                                     ],
                                   ),

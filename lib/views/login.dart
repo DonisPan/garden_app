@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:garden_app/viewmodels/login_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
+    return ChangeNotifierProvider<LoginViewModel>(
       create:
           (_) => LoginViewModel(
             authRepository: Provider.of<AuthRepository>(context, listen: false),
@@ -28,10 +28,10 @@ class LoginPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 20),
-
                     // Email field
                     _buildTextField(
                       controller: viewModel.emailController,
@@ -39,7 +39,6 @@ class LoginPage extends StatelessWidget {
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 15),
-
                     // Password field
                     _buildTextField(
                       controller: viewModel.passwordController,
@@ -47,7 +46,6 @@ class LoginPage extends StatelessWidget {
                       obscureText: true,
                     ),
                     const SizedBox(height: 10),
-
                     // Error message
                     if (viewModel.errorMessage != null)
                       Padding(
@@ -60,12 +58,9 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                       ),
-
                     // Login button
                     _buildLoginButton(viewModel, context),
-
                     const SizedBox(height: 10),
-
                     // Bottom buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +69,7 @@ class LoginPage extends StatelessWidget {
                           onPressed: () => Navigator.pop(context),
                           child: const Text(
                             "Back",
-                            style: TextStyle(fontSize: 16, color: Colors.grey),
+                            style: TextStyle(fontSize: 16, color: Colors.black),
                           ),
                         ),
                         TextButton(
@@ -85,6 +80,7 @@ class LoginPage extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -107,32 +103,29 @@ class LoginPage extends StatelessWidget {
     TextInputType keyboardType = TextInputType.text,
   }) {
     return Container(
-      margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: TextField(
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,
+        style: const TextStyle(color: Colors.black),
         decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(color: Colors.black54, fontSize: 14),
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.all(10),
-          hintText: hintText,
-          hintStyle: const TextStyle(
-            color: Color.fromARGB(255, 216, 216, 216),
-            fontSize: 14,
+          contentPadding: const EdgeInsets.all(12),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: Colors.black, width: 2),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: const BorderSide(color: Colors.black, width: 2),
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide.none,
+            borderSide: const BorderSide(color: Colors.black, width: 2),
           ),
         ),
       ),
@@ -141,16 +134,7 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildLoginButton(LoginViewModel viewModel, BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 5, left: 5, right: 5),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: const Color.fromARGB(255, 216, 216, 216),
-            blurRadius: 30,
-            spreadRadius: 0.0,
-          ),
-        ],
-      ),
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -158,12 +142,16 @@ class LoginPage extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
+          backgroundColor: Colors.black,
         ),
         onPressed: viewModel.isLoading ? null : () => viewModel.login(context),
         child:
             viewModel.isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text("Login", style: TextStyle(fontSize: 16)),
+                : const Text(
+                  "Login",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
       ),
     );
   }
