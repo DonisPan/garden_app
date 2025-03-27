@@ -22,7 +22,7 @@ class SupabaseService {
     // try to load refresh token from secure storage and set user session
     final session = await Global().getUserSession();
     final id = await Global().getUserId();
-    print('Session: $session, id: $id');
+    print('Trying session: $session, user id: $id');
     if (session != null) {
       try {
         await Supabase.instance.client.auth.setSession(session);
@@ -286,6 +286,37 @@ class SupabaseService {
           .from('ga_user_plants')
           .insert({'user_id': userId, 'plant_id': id, 'name': name});
       return response.toString();
+    } catch (error) {
+      return error.toString();
+    }
+  }
+
+  Future<String?> addCustomPlant(
+    String name,
+    String? note,
+    int? plantClass,
+    int? plantFamily,
+  ) async {
+    final userId = await Global().getUserId();
+    try {
+      final plantResponse =
+          await Supabase.instance.client
+              .from('ga_plant')
+              .insert({
+                'name': name,
+                'note': note,
+                'class': plantClass,
+                'family': plantFamily,
+                'is_custom': true,
+              })
+              .select('id')
+              .single();
+      final plantId = plantResponse['id'] as int;
+
+      final userPlantResponse = await Supabase.instance.client
+          .from('ga_user_plants')
+          .insert({'user_id': userId, 'plant_id': plantId});
+      return userPlantResponse.toString();
     } catch (error) {
       return error.toString();
     }

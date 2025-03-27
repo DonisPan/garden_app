@@ -59,15 +59,17 @@ class PlantRemoteRepository implements PlantRepository {
     String? note,
     int? plantClass,
     int? plantFamily,
-    bool isCustom,
-  ) {
-    // TODO: implement addCustomPlant
-    throw UnimplementedError();
+  ) async {
+    return await SupabaseService().addCustomPlant(
+      name,
+      note,
+      plantClass,
+      plantFamily,
+    );
   }
 
   @override
-  Future<void> addPlant(int id, String? customName) async {
-    print('Calling in remote repository');
-    await SupabaseService().addPlant(customName, id: id);
+  Future<String?> addPlant(int id, String? customName) async {
+    return await SupabaseService().addPlant(customName, id: id);
   }
 }

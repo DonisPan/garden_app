@@ -40,10 +40,16 @@ class AddPlantViewModel extends ChangeNotifier {
 
   Future<void> addPlant() async {
     if (!isCustom && selectedPlant != null) {
-      print('Calling in viewmodel');
-      await plantRepository.addPlant(
+      errorMessage = await plantRepository.addPlant(
         selectedPlant!.id,
         customNameController.text,
+      );
+    } else if (isCustom && customNameController.text.isNotEmpty) {
+      errorMessage = await plantRepository.addCustomPlant(
+        customNameController.text,
+        noteController.text,
+        selectedPlantClass?.id,
+        selectedPlantFamily?.id,
       );
     }
     notifyListeners();
