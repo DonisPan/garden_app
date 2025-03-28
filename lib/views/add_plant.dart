@@ -20,7 +20,6 @@ class AddPlantPage extends StatelessWidget {
               title: "Add Plant",
               leftIcon: 'assets/svgs/back.svg',
               onLeftButtonTap: () => Navigator.pop(context),
-              // You can set a right icon and its action if needed.
               showRightButton: false,
             ),
             body: SingleChildScrollView(
@@ -37,7 +36,7 @@ class AddPlantPage extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  // Name field: dropdown if not custom, text field if custom.
+                  // name
                   viewModel.isCustom
                       ? _buildTextField(
                         controller: viewModel.customNameController,
@@ -66,7 +65,7 @@ class AddPlantPage extends StatelessWidget {
                         ],
                       ),
                   const SizedBox(height: 10),
-                  // Note field: editable for custom, auto-filled and read-only otherwise.
+                  // note
                   viewModel.isCustom
                       ? _buildTextField(
                         controller: viewModel.noteController,
@@ -81,7 +80,7 @@ class AddPlantPage extends StatelessWidget {
                         readOnly: true,
                       ),
                   const SizedBox(height: 10),
-                  // Plant Class: dropdown for custom, label for non-custom.
+                  // plant class
                   viewModel.isCustom
                       ? _buildDropdown<PlantClass>(
                         label: "Plant Class",
@@ -101,7 +100,7 @@ class AddPlantPage extends StatelessWidget {
                         readOnly: true,
                       ),
                   const SizedBox(height: 10),
-                  // Family: dropdown for custom, label for non-custom.
+                  // plant family
                   viewModel.isCustom
                       ? _buildDropdown<PlantFamily>(
                         label: "Family (Common & Scientific)",
@@ -124,7 +123,7 @@ class AddPlantPage extends StatelessWidget {
                         readOnly: true,
                       ),
                   const SizedBox(height: 10),
-                  // Custom plant checkbox
+                  // custom plant check box
                   Row(
                     children: [
                       Checkbox(
@@ -143,7 +142,7 @@ class AddPlantPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // Add Plant button
+                  // add plant button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -157,7 +156,7 @@ class AddPlantPage extends StatelessWidget {
                       onPressed:
                           viewModel.isLoading
                               ? null
-                              : () => viewModel.addPlant(),
+                              : () => viewModel.addPlant(context),
                       child:
                           viewModel.isLoading
                               ? const CircularProgressIndicator(
@@ -181,7 +180,7 @@ class AddPlantPage extends StatelessWidget {
     );
   }
 
-  // Reusable text field builder
+  // text field
   Widget _buildTextField({
     required TextEditingController controller,
     required String? label,
@@ -218,7 +217,7 @@ class AddPlantPage extends StatelessWidget {
     );
   }
 
-  // Reusable dropdown builder
+  // dropdown
   Widget _buildDropdown<T>({
     required String label,
     required T? value,

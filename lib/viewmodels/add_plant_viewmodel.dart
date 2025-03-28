@@ -38,14 +38,14 @@ class AddPlantViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addPlant() async {
+  Future<void> addPlant(BuildContext context) async {
     if (!isCustom && selectedPlant != null) {
-      errorMessage = await plantRepository.addPlant(
+      await plantRepository.addPlant(
         selectedPlant!.id,
         customNameController.text,
       );
     } else if (isCustom && customNameController.text.isNotEmpty) {
-      errorMessage = await plantRepository.addCustomPlant(
+      await plantRepository.addCustomPlant(
         customNameController.text,
         noteController.text,
         selectedPlantClass?.id,
@@ -53,6 +53,7 @@ class AddPlantViewModel extends ChangeNotifier {
       );
     }
     notifyListeners();
+    Navigator.pop(context);
   }
 
   @override
