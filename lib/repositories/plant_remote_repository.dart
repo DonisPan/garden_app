@@ -28,8 +28,7 @@ class PlantRemoteRepository implements PlantRepository {
 
   @override
   Future<String?> removePlant(int id) {
-    // TODO: implement removePlant
-    throw UnimplementedError();
+    return SupabaseService().removePlant(id);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:garden_app/views/plant_detail.dart';
 import 'package:provider/provider.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
@@ -33,7 +34,7 @@ class HomePage extends StatelessWidget {
             ),
             body: Column(
               children: [
-                // Search field
+                // search
                 Container(
                   margin: const EdgeInsets.symmetric(
                     horizontal: 8,
@@ -102,7 +103,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Plants list
+                // plants list
                 Expanded(
                   child:
                       viewModel.plants.isEmpty
@@ -112,71 +113,83 @@ class HomePage extends StatelessWidget {
                               style: TextStyle(color: Colors.black),
                             ),
                           )
-                          : ListView.builder(
-                            itemCount: viewModel.plants.length,
-                            itemBuilder: (context, index) {
-                              final Plant plant = viewModel.plants[index];
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 8,
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 2,
-                                    ),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Colors.black12,
-                                        blurRadius: 8,
-                                        spreadRadius: 0,
-                                        offset: Offset(0, 2),
-                                      ),
-                                    ],
+                          : RefreshIndicator(
+                            onRefresh: () async {
+                              await viewModel.fetchPlants();
+                            },
+                            child: ListView.builder(
+                              itemCount: viewModel.plants.length,
+                              itemBuilder: (context, index) {
+                                final Plant plant = viewModel.plants[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
                                   ),
-                                  child: Row(
-                                    children: [
-                                      // Main button for plant name
-                                      Expanded(
-                                        child: TextButton(
-                                          style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.all(15),
-                                            alignment: Alignment.centerLeft,
-                                          ),
-                                          onPressed: () {
-                                            // TODO: Implement action (e.g., show plant details)
-                                          },
-                                          child: Text(
-                                            plant.name,
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.black,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.black,
+                                        width: 2,
+                                      ),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color: Colors.black12,
+                                          blurRadius: 8,
+                                          spreadRadius: 0,
+                                          offset: Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        // plant button
+                                        Expanded(
+                                          child: TextButton(
+                                            style: TextButton.styleFrom(
+                                              padding: const EdgeInsets.all(15),
+                                              alignment: Alignment.centerLeft,
+                                            ),
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder:
+                                                      (context) =>
+                                                          PlantDetailPage(
+                                                            plant: plant,
+                                                          ),
+                                                ),
+                                              );
+                                            },
+                                            child: Text(
+                                              plant.name,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.black,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                      // Water button
-                                      IconButton(
-                                        onPressed: () {
-                                          viewModel.water(plant);
-                                        },
-                                        icon: const Icon(Icons.water_drop),
-                                        color:
-                                            plant.needWater
-                                                ? Colors.black
-                                                : Colors.black,
-                                        // Alternatively, if you want a distinct color when watering:
-                                        // color: plant.needWater ? Colors.blue : Colors.black,
-                                      ),
-                                    ],
+                                        // water button
+                                        IconButton(
+                                          onPressed: () {
+                                            viewModel.water(plant);
+                                          },
+                                          icon: const Icon(Icons.water_drop),
+                                          color:
+                                              plant.needWater
+                                                  ? Colors.black
+                                                  : Colors.black,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                 ),
               ],

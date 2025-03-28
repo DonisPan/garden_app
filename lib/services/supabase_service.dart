@@ -321,4 +321,18 @@ class SupabaseService {
       return error.toString();
     }
   }
+
+  Future<String?> removePlant(int id) async {
+    final userId = await Global().getUserId();
+    try {
+      final deleteRespone = await Supabase.instance.client
+          .from('ga_user_plants')
+          .delete()
+          .eq('plant_id', id)
+          .eq('user_id', userId!);
+      return deleteRespone.toString();
+    } catch (error) {
+      return error.toString();
+    }
+  }
 }
