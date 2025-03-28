@@ -43,7 +43,7 @@ class ProfilePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Name and surname
+                    // name and surname
                     Text(
                       '${viewModel.user?.name} ${viewModel.user?.surname}',
                       style: const TextStyle(
@@ -53,7 +53,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Statistics card
+                    // statistics
                     Card(
                       elevation: 4,
                       color: Colors.white,
@@ -84,7 +84,7 @@ class ProfilePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    // Settings card
+                    // settings
                     Card(
                       elevation: 4,
                       color: Colors.white,

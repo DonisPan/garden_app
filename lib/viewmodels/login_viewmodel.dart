@@ -18,7 +18,7 @@ class LoginViewModel extends ChangeNotifier {
   Future<void> login(BuildContext context) async {
     _errorMessage = null;
     _isLoading = true;
-    notifyListeners(); // Notify UI to update loading state
+    notifyListeners();
 
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
@@ -34,7 +34,7 @@ class LoginViewModel extends ChangeNotifier {
     }
 
     _isLoading = false;
-    notifyListeners(); // Notify UI of the new state
+    notifyListeners();
   }
 
   String? validate(String email, String password) {

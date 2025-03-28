@@ -32,21 +32,21 @@ class LoginPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    // Email field
+                    // email
                     _buildTextField(
                       controller: viewModel.emailController,
                       hintText: "Your email...",
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 15),
-                    // Password field
+                    // password
                     _buildTextField(
                       controller: viewModel.passwordController,
                       hintText: "Your password...",
                       obscureText: true,
                     ),
                     const SizedBox(height: 10),
-                    // Error message
+                    // error
                     if (viewModel.errorMessage != null)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10, left: 10),
@@ -58,10 +58,10 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                    // Login button
+                    // login button
                     _buildLoginButton(viewModel, context),
                     const SizedBox(height: 10),
-                    // Bottom buttons
+                    // bottom buttons
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

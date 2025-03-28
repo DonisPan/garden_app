@@ -51,7 +51,7 @@ class PlantDetailPage extends StatelessWidget {
                     viewModel.plant.isCustom ? 'Yes' : 'No',
                   ),
                   const SizedBox(height: 20),
-                  // Buttons Row
+                  // buttons
                   Row(
                     children: [
                       Expanded(
