@@ -44,10 +44,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.setLocale(const Locale('sk')); // set locale to Slovak
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Garden App',
-      // theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,

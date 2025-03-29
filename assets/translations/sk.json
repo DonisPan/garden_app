@@ -1,0 +1,53 @@
+{
+    "login": {
+      "title": "Prihlásenie",
+      "email_hint": "Váš email...",
+      "password_hint": "Vaše heslo...",
+      "back": "Späť",
+      "login_button": "Prihlásiť sa",
+      "create_account": "Vytvoriť účet"
+    },
+    "register": {
+      "title": "Registrácia",
+      "email_hint": "Váš email...",
+      "password_hint": "Vaše heslo...",
+      "name_hint": "Vaše meno...",
+      "surname_hint": "Vaše priezvisko...",
+      "back": "Späť",
+      "register_button": "Registrovať sa"
+    },
+    "profile": {
+      "title": "Profil",
+      "statistics": {
+        "title": "Štatistiky",
+        "amount_of_plants": "Počet rastlín: "
+      },
+      "settings": {
+        "title": "Nastavenia",
+        "enable_notifications": "Povoliť upozornenia:"
+      }
+    },
+    "home": {
+      "title": "Domov",
+      "search_hint": "Hľadajte svoju rastlinu...",
+      "no_plants_found": "Nenašli sa žiadne rastliny."
+    },
+    "add_plant": {
+      "title": "Pridať rastlinu",
+      "choose_plant": "Vyberte rastlinu",
+      "custom_name": "Zadajte názov vašej vlastnej rastliny",
+      "custom_name_optional": "Váš vlastný názov (voliteľné)",
+      "note": "Poznámka (automaticky vyplnená)",
+      "note_optional": "Poznámka (voliteľná)",
+      "plant_class": "Trieda rastliny (automaticky vyplnená)",
+      "plant_class_optional": "Trieda rastliny (voliteľná)",
+      "plant_family": "Rodina rastlín (automaticky vyplnená)",
+      "plant_family_optional": "Rodina rastlín (voliteľná)",
+      "custom_plant": "Vlastná rastlina",
+      "add_plant": "Pridať rastlinu"
+    },
+    "plant_detail": {
+        
+    }
+  }
+  
