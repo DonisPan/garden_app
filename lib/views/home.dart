@@ -106,7 +106,7 @@ class HomePage extends StatelessWidget {
                 // plants list
                 Expanded(
                   child:
-                      viewModel.plants.isEmpty
+                      viewModel.filteredPlants.isEmpty
                           ? const Center(
                             child: Text(
                               "No plants found.",
@@ -118,9 +118,10 @@ class HomePage extends StatelessWidget {
                               await viewModel.fetchPlants();
                             },
                             child: ListView.builder(
-                              itemCount: viewModel.plants.length,
+                              itemCount: viewModel.filteredPlants.length,
                               itemBuilder: (context, index) {
-                                final Plant plant = viewModel.plants[index];
+                                final Plant plant =
+                                    viewModel.filteredPlants[index];
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 8,

@@ -12,6 +12,8 @@ class HomeViewModel extends ChangeNotifier {
 
   List<Plant> _plants = [];
   List<Plant> get plants => _plants;
+  List<Plant> _filteredPlants = [];
+  List<Plant> get filteredPlants => _filteredPlants;
 
   HomeViewModel({required this.plantRepository, required this.authRepository}) {
     fetchPlants();
@@ -21,8 +23,17 @@ class HomeViewModel extends ChangeNotifier {
   String get searchQuery => _searchQuery;
 
   void updateSearchQuery(String query) {
-    _searchQuery = query;
-
+    if (query.isEmpty) {
+      _filteredPlants = List.from(_plants);
+    } else {
+      _filteredPlants =
+          _plants
+              .where(
+                (plant) =>
+                    plant.name.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
+    }
     notifyListeners();
   }
 
@@ -43,6 +54,7 @@ class HomeViewModel extends ChangeNotifier {
       return;
     }
     _plants = await plantRepository.getPlants(userId);
+    _filteredPlants = _plants;
     notifyListeners();
   }
 
