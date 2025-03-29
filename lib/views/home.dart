@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:garden_app/views/plant_detail.dart';
@@ -26,7 +27,7 @@ class HomePage extends StatelessWidget {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: TopBar(
-              title: 'Home',
+              title: 'home.title'.tr(),
               leftIcon: 'assets/svgs/profile.svg',
               onLeftButtonTap: () => viewModel.leftButton(context),
               rightIcon: 'assets/svgs/plus.svg',
@@ -43,7 +44,7 @@ class HomePage extends StatelessWidget {
                   child: TextField(
                     controller: viewModel.searchQueryController,
                     decoration: InputDecoration(
-                      hintText: "Search for your plant...",
+                      hintText: 'home.search_hint'.tr(),
                       hintStyle: const TextStyle(
                         fontSize: 14,
                         color: Colors.black54,
@@ -107,9 +108,9 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child:
                       viewModel.filteredPlants.isEmpty
-                          ? const Center(
+                          ? Center(
                             child: Text(
-                              "No plants found.",
+                              'home.no_plants_found'.tr(),
                               style: TextStyle(color: Colors.black),
                             ),
                           )

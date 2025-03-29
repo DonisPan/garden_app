@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
@@ -23,8 +24,8 @@ class LoginPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Login",
+                    Text(
+                      'login.title'.tr(),
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
@@ -35,14 +36,14 @@ class LoginPage extends StatelessWidget {
                     // email
                     _buildTextField(
                       controller: viewModel.emailController,
-                      hintText: "Your email...",
+                      hintText: 'login.email_hint'.tr(),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 15),
                     // password
                     _buildTextField(
                       controller: viewModel.passwordController,
-                      hintText: "Your password...",
+                      hintText: 'login.password_hint'.tr(),
                       obscureText: true,
                     ),
                     const SizedBox(height: 10),
@@ -67,16 +68,16 @@ class LoginPage extends StatelessWidget {
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            "Back",
+                          child: Text(
+                            'login.back'.tr(),
                             style: TextStyle(fontSize: 16, color: Colors.black),
                           ),
                         ),
                         TextButton(
                           onPressed:
                               () => Navigator.pushNamed(context, '/register'),
-                          child: const Text(
-                            "Create an account",
+                          child: Text(
+                            'login.create_account'.tr(),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -148,8 +149,8 @@ class LoginPage extends StatelessWidget {
         child:
             viewModel.isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text(
-                  "Login",
+                : Text(
+                  'login.login_button'.tr(),
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
       ),

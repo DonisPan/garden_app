@@ -1,0 +1,57 @@
+{
+    "login": {
+        "title": "Login",
+        "email_hint": "Your email...",
+        "password_hint": "Your password...",
+        "back": "Back",
+        "login_button": "Login",
+        "create_account": "Create account"
+    },
+
+    "register": {
+        "title": "Register",
+        "email_hint": "Your email...",
+        "password_hint": "Your password...",
+        "name_hint": "Your name...",
+        "surname_hint": "Your surname...",
+        "back": "Back",
+        "register_button": "Register"
+    },
+
+    "profile": {
+        "title": "Profile",
+        "statistics": {
+            "title": "Statistics",
+            "amount_of_plants": "Ammount of plants: "
+        },
+        "settings": {
+            "title": "Settings",
+            "enable_notifications": "Enable notifications:"
+        }
+    },
+
+    "home": {
+        "title": "Home",
+        "search_hint": "Search for your plant...",
+        "no_plants_found": "No plants found."
+    },
+
+    "add_plant": {
+        "title": "Add plant",
+        "choose_plant": "Choose plant",
+        "custom_name": "Enter your custom plant name",
+        "custom_name_optional": "Your custom name (optional)",
+        "note": "Note (auto-filled)",
+        "note_optional": "Note (optional)",
+        "plant_class": "Plant class (auto-filled)",
+        "plant_class_optional": "Plant class (optional)",
+        "plant_family": "Plant family (auto-filled)",
+        "plant_family_optional": "Plant family (optional)",
+        "custom_plant": "Custom plant",
+        "add_plant": "Add plant"
+    },
+
+    "plant_detail": {
+        
+    }
+}

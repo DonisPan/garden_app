@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/widgets/top_bar.dart';
@@ -17,7 +18,7 @@ class AddPlantPage extends StatelessWidget {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: TopBar(
-              title: "Add Plant",
+              title: 'add_plant.title'.tr(),
               leftIcon: 'assets/svgs/back.svg',
               onLeftButtonTap: () => Navigator.pop(context),
               showRightButton: false,
@@ -40,14 +41,14 @@ class AddPlantPage extends StatelessWidget {
                   viewModel.isCustom
                       ? _buildTextField(
                         controller: viewModel.customNameController,
-                        label: "Enter your custom plant name",
+                        label: 'add_plant.custom_name'.tr(),
                         readOnly: false,
                       )
                       : Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _buildDropdown<Plant>(
-                            label: "Choose plant",
+                            label: 'add_plant.choose_plant'.tr(),
                             value: viewModel.selectedPlant,
                             items: viewModel.plants,
                             getItemLabel: (plant) => plant.name,
@@ -59,7 +60,7 @@ class AddPlantPage extends StatelessWidget {
                           const SizedBox(height: 10),
                           _buildTextField(
                             controller: viewModel.customNameController,
-                            label: "Or enter your custom plant name",
+                            label: 'add_plant.custom_name_optional'.tr(),
                             readOnly: false,
                           ),
                         ],
@@ -69,21 +70,21 @@ class AddPlantPage extends StatelessWidget {
                   viewModel.isCustom
                       ? _buildTextField(
                         controller: viewModel.noteController,
-                        label: "Note (optional)",
+                        label: 'add_plant.note_optional'.tr(),
                         readOnly: false,
                       )
                       : _buildTextField(
                         controller: TextEditingController(
                           text: viewModel.selectedPlant?.note,
                         ),
-                        label: "Note (auto-filled)",
+                        label: 'add_plant.note'.tr(),
                         readOnly: true,
                       ),
                   const SizedBox(height: 10),
                   // plant class
                   viewModel.isCustom
                       ? _buildDropdown<PlantClass>(
-                        label: "Plant Class",
+                        label: 'add_plant.plant_class_optional'.tr(),
                         value: viewModel.selectedPlantClass,
                         items: viewModel.classes,
                         getItemLabel: (pc) => pc.name ?? '',
@@ -96,14 +97,14 @@ class AddPlantPage extends StatelessWidget {
                         controller: TextEditingController(
                           text: viewModel.selectedPlant?.plantClass?.name ?? '',
                         ),
-                        label: "Plant Class",
+                        label: 'add_plant.plant_class'.tr(),
                         readOnly: true,
                       ),
                   const SizedBox(height: 10),
                   // plant family
                   viewModel.isCustom
                       ? _buildDropdown<PlantFamily>(
-                        label: "Family (Common & Scientific)",
+                        label: 'add_plant.plant_family_optional'.tr(),
                         value: viewModel.selectedPlantFamily,
                         items: viewModel.families,
                         getItemLabel: (pf) => pf.nameCommon ?? '',
@@ -119,7 +120,7 @@ class AddPlantPage extends StatelessWidget {
                                   ? "${viewModel.selectedPlant?.plantFamily?.nameCommon ?? ''} | ${viewModel.selectedPlant?.plantFamily?.nameScientific ?? ''}"
                                   : "",
                         ),
-                        label: "Family (Common & Scientific)",
+                        label: 'add_plant.plant_family'.tr(),
                         readOnly: true,
                       ),
                   const SizedBox(height: 10),
@@ -135,8 +136,8 @@ class AddPlantPage extends StatelessWidget {
                           }
                         },
                       ),
-                      const Text(
-                        "Custom Plant",
+                      Text(
+                        'add_plant.custom_plant'.tr(),
                         style: TextStyle(color: Colors.black),
                       ),
                     ],
@@ -162,8 +163,8 @@ class AddPlantPage extends StatelessWidget {
                               ? const CircularProgressIndicator(
                                 color: Colors.white,
                               )
-                              : const Text(
-                                "Add Plant",
+                              : Text(
+                                'add_plant.add_plant'.tr(),
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,

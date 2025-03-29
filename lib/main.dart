@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/repositories/auth_remote_repository.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
@@ -14,25 +15,26 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 
   Global();
-  // Global().delUserSession();
   await SupabaseService.initialize();
-
-  // SupabaseService().register('denvas002@gmail.com', 'hello123');
-  // SupabaseService().login('denvas002@gmail.com', 'hello123');
-  // SupabaseService().logout();
 
   final authRepository = AuthRemoteRepository();
   final plantRepository = PlantRemoteRepository();
 
   runApp(
-    MultiProvider(
-      providers: [
-        Provider<AuthRepository>.value(value: authRepository),
-        Provider<PlantRepository>.value(value: plantRepository),
-      ],
-      child: const MyApp(),
+    EasyLocalization(
+      supportedLocales: const [Locale('en'), Locale('sk')],
+      path: 'assets/translations',
+      fallbackLocale: const Locale('en'),
+      child: MultiProvider(
+        providers: [
+          Provider<AuthRepository>.value(value: authRepository),
+          Provider<PlantRepository>.value(value: plantRepository),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
@@ -45,7 +47,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Garden App',
-      theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
+      // theme: ThemeData(fontFamily: 'AtkinsonHyperlegiableMono'),
+      localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
       home: Global.isAuthorized() ? HomePage() : LoginPage(),
       routes: {
         '/home': (context) => const HomePage(),

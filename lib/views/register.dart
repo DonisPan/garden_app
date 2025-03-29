@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,8 +36,8 @@ class RegisterPage extends StatelessWidget {
         builder: (context, viewModel, child) {
           return Scaffold(
             appBar: AppBar(
-              title: const Text(
-                "Register",
+              title: Text(
+                'register.title'.tr(),
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
@@ -86,14 +87,14 @@ class RegisterPage extends StatelessWidget {
                         Expanded(
                           child: _buildInputField(
                             controller: viewModel.nameController,
-                            hintText: "Your name",
+                            hintText: 'register.name_hint'.tr(),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: _buildInputField(
                             controller: viewModel.surnameController,
-                            hintText: "Your surname",
+                            hintText: 'register.surname_hint'.tr(),
                           ),
                         ),
                       ],
@@ -102,14 +103,14 @@ class RegisterPage extends StatelessWidget {
                     // email
                     _buildInputField(
                       controller: viewModel.emailController,
-                      hintText: "Your email...",
+                      hintText: 'register.email_hint'.tr(),
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 15),
                     // password
                     _buildInputField(
                       controller: viewModel.passwordController,
-                      hintText: "Your password...",
+                      hintText: 'register.password_hint'.tr(),
                       isPassword: true,
                     ),
                     const SizedBox(height: 10),
@@ -133,8 +134,8 @@ class RegisterPage extends StatelessWidget {
                       children: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            "Back",
+                          child: Text(
+                            'register.back'.tr(),
                             style: TextStyle(fontSize: 16, color: Colors.black),
                           ),
                         ),
@@ -208,8 +209,8 @@ class RegisterPage extends StatelessWidget {
         child:
             viewModel.isLoading
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text(
-                  "Register",
+                : Text(
+                  'register.register_button'.tr(),
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
       ),
