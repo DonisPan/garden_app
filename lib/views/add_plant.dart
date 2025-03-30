@@ -66,6 +66,7 @@ class AddPlantPage extends StatelessWidget {
                         ],
                       ),
                   const SizedBox(height: 10),
+
                   // note
                   viewModel.isCustom
                       ? _buildTextField(
@@ -80,6 +81,7 @@ class AddPlantPage extends StatelessWidget {
                         label: 'add_plant.note'.tr(),
                         readOnly: true,
                       ),
+
                   const SizedBox(height: 10),
                   // plant class
                   viewModel.isCustom
@@ -186,10 +188,15 @@ class AddPlantPage extends StatelessWidget {
     required TextEditingController controller,
     required String? label,
     bool readOnly = false,
+    int minLines = 1,
+    int maxLines = 80,
   }) {
     final textField = TextField(
       controller: controller,
       readOnly: readOnly,
+      keyboardType: TextInputType.multiline,
+      minLines: minLines,
+      maxLines: maxLines,
       style: const TextStyle(color: Colors.black),
       decoration: InputDecoration(
         labelText: label,
