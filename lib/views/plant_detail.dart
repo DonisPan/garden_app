@@ -157,9 +157,11 @@ class PlantDetailPage extends StatelessWidget {
   }
 
   Widget _buildDetailRow(String title, String detail) {
-    return Padding(
+    return Container(
+      width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
@@ -169,12 +171,11 @@ class PlantDetailPage extends StatelessWidget {
               fontSize: 16,
             ),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              detail,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-            ),
+          const SizedBox(height: 4),
+          Text(
+            detail,
+            style: const TextStyle(color: Colors.black, fontSize: 16),
+            softWrap: true,
           ),
         ],
       ),
