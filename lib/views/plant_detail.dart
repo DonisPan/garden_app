@@ -117,35 +117,40 @@ class PlantDetailPage extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDetailRow(
-              'plant_detail.details.name'.tr(),
-              viewModel.plant.name,
+        child: Container(
+          constraints: const BoxConstraints(maxHeight: 250),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildDetailRow(
+                  'plant_detail.details.name'.tr(),
+                  viewModel.plant.name,
+                ),
+                _buildDetailRow(
+                  'plant_detail.details.note'.tr(),
+                  viewModel.plant.note ?? 'plant_detail.details.no_note'.tr(),
+                ),
+                _buildDetailRow(
+                  'plant_detail.details.plant_class'.tr(),
+                  viewModel.plant.plantClass?.name ??
+                      'plant_detail.details.no_plant_class'.tr(),
+                ),
+                _buildDetailRow(
+                  'plant_detail.details.plant_family'.tr(),
+                  viewModel.plant.plantFamily == null
+                      ? 'plant_detail.details.no_plant_family'.tr()
+                      : '${viewModel.plant.plantFamily?.nameCommon ?? ''} | ${viewModel.plant.plantFamily?.nameScientific ?? ''}',
+                ),
+                _buildDetailRow(
+                  'plant_detail.details.custom_plant'.tr(),
+                  viewModel.plant.isCustom
+                      ? 'plant_detail.details.yes'.tr()
+                      : 'plant_detail.details.no'.tr(),
+                ),
+              ],
             ),
-            _buildDetailRow(
-              'plant_detail.details.note'.tr(),
-              viewModel.plant.note ?? 'plant_detail.details.no_note'.tr(),
-            ),
-            _buildDetailRow(
-              'plant_detail.details.plant_class'.tr(),
-              viewModel.plant.plantClass?.name ??
-                  'plant_detail.details.no_plant_class'.tr(),
-            ),
-            _buildDetailRow(
-              'plant_detail.details.plant_family'.tr(),
-              viewModel.plant.plantFamily == null
-                  ? 'plant_detail.details.no_plant_family'.tr()
-                  : '${viewModel.plant.plantFamily?.nameCommon ?? ''} | ${viewModel.plant.plantFamily?.nameScientific ?? ''}',
-            ),
-            _buildDetailRow(
-              'plant_detail.details.custom_plant'.tr(),
-              viewModel.plant.isCustom
-                  ? 'plant_detail.details.yes'.tr()
-                  : 'plant_detail.details.no'.tr(),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -186,19 +191,21 @@ class PlantDetailPage extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Container(
-          // max height
+        child: ConstrainedBox(
           constraints: const BoxConstraints(maxHeight: 210),
-          child:
-              plantImages.isEmpty
-                  ? Center(
-                    child: Text(
-                      "plant_detail.no_images".tr(),
-                      style: TextStyle(color: Colors.black, fontSize: 16),
-                    ),
-                  )
-                  : SingleChildScrollView(
-                    child: Wrap(
+          child: SingleChildScrollView(
+            child:
+                plantImages.isEmpty
+                    ? Center(
+                      child: Text(
+                        "plant_detail.no_images".tr(),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                    )
+                    : Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children:
@@ -218,7 +225,7 @@ class PlantDetailPage extends StatelessWidget {
                             );
                           }).toList(),
                     ),
-                  ),
+          ),
         ),
       ),
     );
