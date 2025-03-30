@@ -1,6 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:garden_app/repositories/plant_repository.dart';
-import 'package:garden_app/viewmodels/plant_data_viewmodel.dart';
+import 'package:garden_app/viewmodels/plant_detail_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/widgets/top_bar.dart';
@@ -15,10 +15,10 @@ class PlantDetailPage extends StatelessWidget {
       create:
           (_) => PlantDetailViewModel(
             plant: plant,
-            plantRepository: Provider.of<PlantRepository>(
+            plantRepository: Provider.of(
               context,
               listen: false,
-            ),
+            ), // Provide your PlantRepository here
           ),
       child: Consumer<PlantDetailViewModel>(
         builder: (context, viewModel, child) {
@@ -34,24 +34,47 @@ class PlantDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDetailRow('Name:', viewModel.plant.name),
-                  _buildDetailRow('Note:', viewModel.plant.note ?? 'No note'),
-                  _buildDetailRow(
-                    'Plant Class:',
-                    viewModel.plant.plantClass?.name ?? 'Not specified',
-                  ),
-                  _buildDetailRow(
-                    'Family:',
-                    viewModel.plant.plantFamily == null
-                        ? 'Not specified'
-                        : '${viewModel.plant.plantFamily?.nameCommon ?? ''} | ${viewModel.plant.plantFamily?.nameScientific ?? ''}',
-                  ),
-                  _buildDetailRow(
-                    'Custom Plant:',
-                    viewModel.plant.isCustom ? 'Yes' : 'No',
+                  // Plant Data Card
+                  Card(
+                    elevation: 4,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: const BorderSide(color: Colors.black, width: 2),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDetailRow('Name:', viewModel.plant.name),
+                          _buildDetailRow(
+                            'Note:',
+                            viewModel.plant.note ?? 'No note',
+                          ),
+                          _buildDetailRow(
+                            'Plant Class:',
+                            viewModel.plant.plantClass?.name ?? 'Not specified',
+                          ),
+                          _buildDetailRow(
+                            'Family:',
+                            viewModel.plant.plantFamily == null
+                                ? 'Not specified'
+                                : '${viewModel.plant.plantFamily?.nameCommon ?? ''} | ${viewModel.plant.plantFamily?.nameScientific ?? ''}',
+                          ),
+                          _buildDetailRow(
+                            'Custom Plant:',
+                            viewModel.plant.isCustom ? 'Yes' : 'No',
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  // buttons
+                  // Images Card
+                  _buildImagesCard(viewModel.plantImages),
+                  const SizedBox(height: 20),
+                  // Buttons Row: Delete and Manage Notifications
                   Row(
                     children: [
                       Expanded(
@@ -90,6 +113,27 @@ class PlantDetailPage extends StatelessWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
+                  // Add Image Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () => viewModel.addImage(context),
+                      icon: const Icon(Icons.add_a_photo, color: Colors.white),
+                      label: const Text(
+                        "Add Image",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
@@ -100,16 +144,9 @@ class PlantDetailPage extends StatelessWidget {
   }
 
   Widget _buildDetailRow(String title, String detail) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.black, width: 2),
-        borderRadius: BorderRadius.circular(15),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
@@ -127,6 +164,46 @@ class PlantDetailPage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildImagesCard(List<File> plantImages) {
+    return Card(
+      elevation: 4,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: const BorderSide(color: Colors.black, width: 2),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child:
+            plantImages.isEmpty
+                ? const Center(
+                  child: Text(
+                    "No images added.",
+                    style: TextStyle(color: Colors.black, fontSize: 16),
+                  ),
+                )
+                : Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children:
+                      plantImages
+                          .map(
+                            (imageFile) => ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.file(
+                                imageFile,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                ),
       ),
     );
   }
