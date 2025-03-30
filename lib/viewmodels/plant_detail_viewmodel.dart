@@ -21,7 +21,7 @@ class PlantDetailViewModel extends ChangeNotifier {
     // get the application documents directory
     final Directory appDir = await getApplicationDocumentsDirectory();
     // set the directory for current plant
-    final Directory plantDir = Directory('${appDir.path}/plant_${plant.name}');
+    final Directory plantDir = Directory('${appDir.path}/plant_${plant.id}');
     if (await plantDir.exists()) {
       // list all images
       final List<FileSystemEntity> files = await plantDir.list().toList();
@@ -62,7 +62,7 @@ class PlantDetailViewModel extends ChangeNotifier {
           final Directory appDir = await getApplicationDocumentsDirectory();
           // set the directory for current plant
           final Directory plantDir = Directory(
-            '${appDir.path}/plant_${plant.name}',
+            '${appDir.path}/plant_${plant.id}',
           );
           if (!(await plantDir.exists())) {
             await plantDir.create(recursive: true);
