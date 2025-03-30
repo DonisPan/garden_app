@@ -52,6 +52,21 @@
     },
 
     "plant_detail": {
-        
-    }
+    "details": {
+      "name": "Name:",
+      "note": "Note:",
+      "no_note": "No note",
+      "plant_class": "Plant Class:",
+      "no_plant_class": "Not specified",
+      "plant_family": "Family:",
+      "no_plant_family": "Not specified",
+      "custom_plant": "Custom Plant:",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "delete_plant": "Delete Plant",
+    "manage_notifications": "Manage Notifications",
+    "add_image": "Add Image",
+    "no_images": "No images added."
+  }
 }

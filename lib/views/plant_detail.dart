@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/viewmodels/plant_detail_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +16,7 @@ class PlantDetailPage extends StatelessWidget {
       create:
           (_) => PlantDetailViewModel(
             plant: plant,
-            plantRepository: Provider.of(
-              context,
-              listen: false,
-            ), // Provide your PlantRepository here
+            plantRepository: Provider.of(context, listen: false),
           ),
       child: Consumer<PlantDetailViewModel>(
         builder: (context, viewModel, child) {
@@ -34,47 +32,13 @@ class PlantDetailPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Plant Data Card
-                  Card(
-                    elevation: 4,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                      side: const BorderSide(color: Colors.black, width: 2),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildDetailRow('Name:', viewModel.plant.name),
-                          _buildDetailRow(
-                            'Note:',
-                            viewModel.plant.note ?? 'No note',
-                          ),
-                          _buildDetailRow(
-                            'Plant Class:',
-                            viewModel.plant.plantClass?.name ?? 'Not specified',
-                          ),
-                          _buildDetailRow(
-                            'Family:',
-                            viewModel.plant.plantFamily == null
-                                ? 'Not specified'
-                                : '${viewModel.plant.plantFamily?.nameCommon ?? ''} | ${viewModel.plant.plantFamily?.nameScientific ?? ''}',
-                          ),
-                          _buildDetailRow(
-                            'Custom Plant:',
-                            viewModel.plant.isCustom ? 'Yes' : 'No',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // plant details card
+                  _buildDetailsCard(viewModel),
                   const SizedBox(height: 20),
-                  // Images Card
-                  _buildImagesCard(viewModel.plantImages),
+                  // images card
+                  _buildImagesCard(context, viewModel.plantImages),
                   const SizedBox(height: 20),
-                  // Buttons Row: Delete and Manage Notifications
+                  // buttons
                   Row(
                     children: [
                       Expanded(
@@ -87,8 +51,8 @@ class PlantDetailPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: const Text(
-                            "Delete Plant",
+                          child: Text(
+                            "plant_detail.delete_plant".tr(),
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
@@ -105,8 +69,8 @@ class PlantDetailPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
-                          child: const Text(
-                            "Manage Notifications",
+                          child: Text(
+                            "plant_detail.manage_notifications".tr(),
                             style: TextStyle(fontSize: 16, color: Colors.white),
                           ),
                         ),
@@ -114,14 +78,14 @@ class PlantDetailPage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // Add Image Button
+                  // add image button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () => viewModel.addImage(context),
                       icon: const Icon(Icons.add_a_photo, color: Colors.white),
-                      label: const Text(
-                        "Add Image",
+                      label: Text(
+                        "plant_detail.add_image".tr(),
                         style: TextStyle(color: Colors.white, fontSize: 16),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -139,6 +103,50 @@ class PlantDetailPage extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Card _buildDetailsCard(PlantDetailViewModel viewModel) {
+    return Card(
+      elevation: 4,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+        side: const BorderSide(color: Colors.black, width: 2),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDetailRow(
+              'plant_detail.details.name'.tr(),
+              viewModel.plant.name,
+            ),
+            _buildDetailRow(
+              'plant_detail.details.note'.tr(),
+              viewModel.plant.note ?? 'plant_detail.details.no_note'.tr(),
+            ),
+            _buildDetailRow(
+              'plant_detail.details.plant_class'.tr(),
+              viewModel.plant.plantClass?.name ??
+                  'plant_detail.details.no_plant_class'.tr(),
+            ),
+            _buildDetailRow(
+              'plant_detail.details.plant_family'.tr(),
+              viewModel.plant.plantFamily == null
+                  ? 'plant_detail.details.no_plant_family'.tr()
+                  : '${viewModel.plant.plantFamily?.nameCommon ?? ''} | ${viewModel.plant.plantFamily?.nameScientific ?? ''}',
+            ),
+            _buildDetailRow(
+              'plant_detail.details.custom_plant'.tr(),
+              viewModel.plant.isCustom
+                  ? 'plant_detail.details.yes'.tr()
+                  : 'plant_detail.details.no'.tr(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -168,7 +176,7 @@ class PlantDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildImagesCard(List<File> plantImages) {
+  Widget _buildImagesCard(BuildContext context, List<File> plantImages) {
     return Card(
       elevation: 4,
       color: Colors.white,
@@ -178,33 +186,54 @@ class PlantDetailPage extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child:
-            plantImages.isEmpty
-                ? const Center(
-                  child: Text(
-                    "No images added.",
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                )
-                : Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children:
-                      plantImages
-                          .map(
-                            (imageFile) => ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.file(
-                                imageFile,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
+        child: Container(
+          // max height
+          constraints: const BoxConstraints(maxHeight: 210),
+          child:
+              plantImages.isEmpty
+                  ? Center(
+                    child: Text(
+                      "plant_detail.no_images".tr(),
+                      style: TextStyle(color: Colors.black, fontSize: 16),
+                    ),
+                  )
+                  : SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children:
+                          plantImages.map((imageFile) {
+                            return GestureDetector(
+                              onTap:
+                                  () => _showExpandedImage(context, imageFile),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  imageFile,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
-                            ),
-                          )
-                          .toList(),
-                ),
+                            );
+                          }).toList(),
+                    ),
+                  ),
+        ),
       ),
+    );
+  }
+
+  Future<void> _showExpandedImage(BuildContext context, File imageFile) async {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.9),
+      builder: (context) {
+        return GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Center(child: InteractiveViewer(child: Image.file(imageFile))),
+        );
+      },
     );
   }
 }

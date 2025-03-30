@@ -47,7 +47,22 @@
       "add_plant": "Pridať rastlinu"
     },
     "plant_detail": {
-        
-    }
+    "details": {
+      "name": "Meno:",
+      "note": "Poznámka:",
+      "no_note": "Žiadna poznámka",
+      "plant_class": "Trieda rastliny:",
+      "no_plant_class": "Nedefinované",
+      "plant_family": "Rodina:",
+      "no_plant_family": "Nedefinované",
+      "custom_plant": "Vlastná rastlina:",
+      "yes": "Áno",
+      "no": "Nie"
+    },
+    "delete_plant": "Odstrániť rastlinu",
+    "manage_notifications": "Upozornenia",
+    "add_image": "Pridať obrázok",
+    "no_images": "Žiadne obrázky neboli pridané."
+  }
   }
   
