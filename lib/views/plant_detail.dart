@@ -211,23 +211,42 @@ class PlantDetailPage extends StatelessWidget {
                       runSpacing: 8,
                       children:
                           plantImages.map((imageFile) {
-                            return GestureDetector(
-                              onTap:
-                                  () => _showExpandedImage(context, imageFile),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.file(
-                                  imageFile,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
+                            return Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap:
+                                      () => _showExpandedImage(
+                                        context,
+                                        imageFile,
+                                      ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.file(
+                                      imageFile,
+                                      width: 100,
+                                      height: 100,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                _buildDeleteButton(context, imageFile),
+                              ],
                             );
                           }).toList(),
                     ),
           ),
         ),
+      ),
+    );
+  }
+
+  Positioned _buildDeleteButton(BuildContext context, File imageFile) {
+    return Positioned(
+      top: -10,
+      right: -10,
+      child: IconButton(
+        icon: const Icon(Icons.delete, color: Colors.white, size: 20),
+        onPressed: () => confirmDeleteImage(context, imageFile),
       ),
     );
   }

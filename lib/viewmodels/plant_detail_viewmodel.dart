@@ -5,6 +5,7 @@ import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class PlantDetailViewModel extends ChangeNotifier {
   final Plant plant;
@@ -51,7 +52,7 @@ class PlantDetailViewModel extends ChangeNotifier {
 
     if (galleryPermission.isGranted && cameraPermission.isGranted) {
       // show the dialog for image source
-      final ImageSource? source = await _showImageSourceDialog(context);
+      final ImageSource? source = await showImageSourceDialog(context);
 
       if (source != null) {
         final picker = ImagePicker();
@@ -83,6 +84,14 @@ class PlantDetailViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> removeImage(File imageFile) async {
+    if (await imageFile.exists()) {
+      await imageFile.delete();
+    }
+    _plantImages.remove(imageFile);
+    notifyListeners();
+  }
+
   Future<void> deletePlant(BuildContext context) async {
     await plantRepository.removePlant(plant.id);
     notifyListeners();
@@ -94,7 +103,7 @@ class PlantDetailViewModel extends ChangeNotifier {
   }
 }
 
-Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
+Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
   return showDialog<ImageSource>(
     context: context,
     builder: (BuildContext dialogContext) {
@@ -142,4 +151,46 @@ Future<ImageSource?> _showImageSourceDialog(BuildContext context) async {
       );
     },
   );
+}
+
+Future<void> confirmDeleteImage(BuildContext context, File imageFile) async {
+  final bool? confirmed = await showDialog<bool>(
+    context: context,
+    builder: (BuildContext dialogContext) {
+      return AlertDialog(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+          side: const BorderSide(color: Colors.black, width: 2),
+        ),
+        title: const Text(
+          "Confirm Deletion",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        content: const Text(
+          "Are you sure you want to delete this image?",
+          style: TextStyle(color: Colors.black),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            style: TextButton.styleFrom(foregroundColor: Colors.black),
+            child: const Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.black),
+            child: const Text("Delete"),
+          ),
+        ],
+      );
+    },
+  );
+
+  if (confirmed == true) {
+    Provider.of<PlantDetailViewModel>(
+      context,
+      listen: false,
+    ).removeImage(imageFile);
+  }
 }
