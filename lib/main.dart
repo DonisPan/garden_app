@@ -5,6 +5,7 @@ import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:garden_app/repositories/plant_remote_repository.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:garden_app/services/global.dart';
+import 'package:garden_app/services/local_notification_service.dart';
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/add_plant.dart';
 import 'package:garden_app/views/home.dart';
@@ -15,13 +16,48 @@ import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await EasyLocalization.ensureInitialized();
+  await EasyLocalization.ensureInitialized(); // for different languages
 
   Global();
-  await SupabaseService.initialize();
+  await SupabaseService.initialize(); // for remote
 
   final authRepository = AuthRemoteRepository();
   final plantRepository = PlantRemoteRepository();
+
+  // Initialize notifications service
+  await LocalNotificationsService.initialize(
+    onDidReceiveNotificationResponse: (response) {
+      // This handles when user taps on a notification
+      print('Notification tapped!');
+      print('ID: ${response.id}');
+      print('Payload: ${response.payload}');
+
+      // You can navigate to specific screens based on the payload
+      if (response.payload == 'special') {
+        // Navigator.push(...) to specific screen
+      }
+    },
+  );
+
+  final bool granted = await LocalNotificationsService.requestPermissions();
+  print('Notification permissions granted: $granted');
+
+  // Check if app was launched via notification
+  final launchDetails =
+      await LocalNotificationsService.getNotificationAppLaunchDetails();
+  if (launchDetails?.didNotificationLaunchApp ?? false) {
+    print('App launched via notification');
+    print('Notification ID: ${launchDetails?.notificationResponse?.id}');
+    print(
+      'Notification Payload: ${launchDetails?.notificationResponse?.payload}',
+    );
+  }
+
+  await LocalNotificationsService.showNotification(
+    body: 'Application started',
+    id: 1,
+    title: 'Notification test',
+  );
 
   runApp(
     EasyLocalization(

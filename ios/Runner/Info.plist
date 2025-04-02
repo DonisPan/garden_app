@@ -48,9 +48,6 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>photos</string>
 
-	<!-- <key>NSPhotoLibraryAddUsageDescription</key>
-	<string>App needs permission to save photos</string> -->
-
 	<key>NSRemindersUsageDescription</key>
     <string>reminders</string>
 
@@ -59,5 +56,12 @@
 
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+
 </dict>
 </plist>
