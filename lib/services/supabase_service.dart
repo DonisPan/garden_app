@@ -21,14 +21,11 @@ class SupabaseService {
 
     // try to load refresh token from secure storage and set user session
     final session = await Global().getUserSession();
-    final id = await Global().getUserId();
-    print('Trying session: $session, user id: $id');
     if (session != null) {
       try {
         await Supabase.instance.client.auth.setSession(session);
         Global.authorize();
       } catch (error) {
-        print('Error setting session: $error');
         await Global().delUserSession();
         Global.unAuthorize();
       }

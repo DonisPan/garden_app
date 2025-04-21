@@ -58,11 +58,6 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void water(Plant plant) {
-    plant.needWater = !plant.needWater;
-    notifyListeners();
-  }
-
   @override
   void dispose() {
     searchQueryController.dispose();

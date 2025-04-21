@@ -177,14 +177,8 @@ class HomePage extends StatelessWidget {
                                         ),
                                         // water button
                                         IconButton(
-                                          onPressed: () {
-                                            viewModel.water(plant);
-                                          },
+                                          onPressed: () {},
                                           icon: const Icon(Icons.water_drop),
-                                          color:
-                                              plant.needWater
-                                                  ? Colors.black
-                                                  : Colors.black,
                                         ),
                                       ],
                                     ),

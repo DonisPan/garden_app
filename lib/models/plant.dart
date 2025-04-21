@@ -1,3 +1,5 @@
+import 'package:garden_app/models/notification.dart';
+
 class Plant {
   final int _id;
   final String _name;
@@ -5,7 +7,7 @@ class Plant {
   final PlantClass? _plantClass;
   final PlantFamily? _plantFamily;
   final bool _isCustom;
-  bool _needWater = false;
+  List<PlantNotification> notifications;
 
   Plant({
     required int id,
@@ -14,12 +16,14 @@ class Plant {
     required PlantClass? plantClass,
     required PlantFamily? plantFamily,
     required bool isCustom,
+    List<PlantNotification>? notifications,
   }) : _id = id,
        _name = name,
        _note = note,
        _plantClass = plantClass,
        _plantFamily = plantFamily,
-       _isCustom = isCustom;
+       _isCustom = isCustom,
+       notifications = notifications ?? [];
 
   int get id => _id;
   String get name => _name;
@@ -28,8 +32,17 @@ class Plant {
   PlantFamily? get plantFamily => _plantFamily;
   bool get isCustom => _isCustom;
 
-  bool get needWater => _needWater;
-  set needWater(bool par) => _needWater = par;
+  void addNotification(PlantNotification notification) {
+    notifications.add(notification);
+  }
+
+  void removeNotification(PlantNotification notification) {
+    notifications.remove(notification);
+  }
+
+  void clearNotifications() {
+    notifications.clear();
+  }
 }
 
 class PlantFamily {

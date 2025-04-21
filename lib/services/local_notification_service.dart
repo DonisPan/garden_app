@@ -195,4 +195,10 @@ class LocalNotificationsService {
   getNotificationAppLaunchDetails() async {
     return await _notificationsPlugin.getNotificationAppLaunchDetails();
   }
+
+  // get pending notifications
+  static Future<List<PendingNotificationRequest>>
+  getPendingNotifications() async {
+    return await _notificationsPlugin.pendingNotificationRequests();
+  }
 }

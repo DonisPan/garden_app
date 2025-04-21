@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
+import 'package:garden_app/views/plant_notifications.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -99,7 +100,12 @@ class PlantDetailViewModel extends ChangeNotifier {
   }
 
   Future<void> manageNotifications(BuildContext context) async {
-    // TODO: Implement notification management.
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlantNotificationsPage(plant: plant),
+      ),
+    );
   }
 }
 

@@ -68,5 +68,19 @@
     "manage_notifications": "Manage Notifications",
     "add_image": "Add Image",
     "no_images": "No images added."
-  }
+  },
+
+  "notifications": {
+      "title": "Reminders",
+      "add_title": "New reminder",
+      "empty": "No reminders yet",
+      "starts": "Starts",
+      "frequency": "Frequency",
+      "next": "Next",
+      "message_label": "Enter reminder message",
+      "repeat": "Repeat",
+      "save": "Save",
+      "date": "Date",
+      "time": "Time"
+    }
 }

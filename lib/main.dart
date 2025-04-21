@@ -8,8 +8,10 @@ import 'package:garden_app/services/global.dart';
 import 'package:garden_app/services/local_notification_service.dart';
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/add_plant.dart';
+import 'package:garden_app/views/add_plant_notification.dart';
 import 'package:garden_app/views/home.dart';
 import 'package:garden_app/views/login.dart';
+import 'package:garden_app/views/plant_notifications.dart';
 import 'package:garden_app/views/profile.dart';
 import 'package:garden_app/views/register.dart';
 import 'package:provider/provider.dart';
@@ -53,11 +55,12 @@ void main() async {
     );
   }
 
-  await LocalNotificationsService.showNotification(
-    body: 'Application started',
-    id: 1,
-    title: 'Notification test',
-  );
+  // await LocalNotificationsService.scheduleNotification(
+  //   id: 1,
+  //   body: 'Application started',
+  //   title: 'Notification test',
+  //   scheduledDate: DateTime.now().add(Duration(seconds: 30)),
+  // );
 
   runApp(
     EasyLocalization(

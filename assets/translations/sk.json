@@ -63,6 +63,19 @@
     "manage_notifications": "Upozornenia",
     "add_image": "Pridať obrázok",
     "no_images": "Žiadne obrázky neboli pridané."
-  }
+  },
+  "notifications": {
+      "title": "Upozornenia",
+      "add_title": "Nové upozornenie",
+      "empty": "Žiadne upozornenia",
+      "starts": "Začína",
+      "frequency": "Opakuje sa",
+      "next": "Najbližšie",
+      "message_label": "Zadaj text upozornenia",
+      "repeat": "Opakovať",
+      "save": "Uložiť",
+      "date": "Dátum",
+      "time": "Čas"
+    }
   }
   
