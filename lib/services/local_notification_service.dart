@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -84,53 +86,6 @@ class LocalNotificationsService {
       body,
       notificationDetails,
       payload: payload,
-    );
-  }
-
-  // Add these methods to your LocalNotificationsService class
-
-  /// Schedule watering reminder for a specific plant
-  static Future<void> scheduleWateringReminder({
-    required int plantId,
-    required String plantName,
-    required Duration wateringFrequency,
-    String? plantImagePath,
-    DateTime? firstWateringDate,
-  }) async {
-    final id =
-        plantId; // Using plantId as notification id for easy cancellation
-
-    await scheduleNotification(
-      id: id,
-      title: 'Time to water your $plantName',
-      body: 'Your $plantName needs watering today! 💧',
-      scheduledDate: firstWateringDate ?? DateTime.now().add(wateringFrequency),
-      payload: 'water_plant_$plantId',
-      channelId: 'watering_reminders',
-      channelName: 'Watering Reminders',
-      channelDescription: 'Reminders to water your plants',
-      matchDateTimeComponents: DateTimeComponents.time,
-    );
-  }
-
-  /// Cancel watering reminder for a specific plant
-  static Future<void> cancelWateringReminder(int plantId) async {
-    await cancelNotification(plantId);
-  }
-
-  /// Show immediate watering confirmation
-  static Future<void> showWateringConfirmation({
-    required int plantId,
-    required String plantName,
-  }) async {
-    await showNotification(
-      id: plantId + 1000, // Different ID range for immediate notifications
-      title: 'Watering logged',
-      body: 'You watered your $plantName 🌱',
-      payload: 'watering_logged_$plantId',
-      channelId: 'plant_actions',
-      channelName: 'Plant Actions',
-      channelDescription: 'Plant care confirmations',
     );
   }
 

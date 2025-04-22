@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
+import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:garden_app/services/local_notification_service.dart';
 import 'package:garden_app/views/add_plant_notification.dart';
 
 class PlantNotificationsViewModel extends ChangeNotifier {
   final Plant plant;
-  bool _loading = false;
+  final PlantRepository plantRepository;
 
-  PlantNotificationsViewModel({required this.plant});
+  PlantNotificationsViewModel({
+    required this.plant,
+    required this.plantRepository,
+  });
 
-  bool get loading => _loading;
   List<PlantNotification> get notifications => plant.notifications;
 
   Future<void> _scheduleSystemNotification(
@@ -34,13 +37,14 @@ class PlantNotificationsViewModel extends ChangeNotifier {
     required int? repeatEveryDays,
   }) async {
     final notification = PlantNotification(
-      id: DateTime.now().millisecondsSinceEpoch,
+      id: _generateNotificationId(),
       plantId: plant.id,
       message: message,
       startDate: startDate,
       repeatEveryDays: repeatEveryDays,
     );
     plant.addNotification(notification);
+    plantRepository.addNotification(notification);
     await _scheduleSystemNotification(notification);
     notifyListeners();
   }
@@ -80,7 +84,13 @@ class PlantNotificationsViewModel extends ChangeNotifier {
   Future<void> deleteNotification(PlantNotification notification) async {
     await LocalNotificationsService.cancelNotification(notification.id);
     plant.removeNotification(notification);
+    // plantRepository.removeNotification(notification);
     notifyListeners();
+  }
+
+  int _generateNotificationId() {
+    final int low = DateTime.now().millisecondsSinceEpoch % 1000000;
+    return plant.id * 1000000 + low;
   }
 
   void editNotification(BuildContext context, PlantNotification notification) {

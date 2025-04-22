@@ -16,7 +16,11 @@ class PlantNotificationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => PlantNotificationsViewModel(plant: plant),
+      create:
+          (_) => PlantNotificationsViewModel(
+            plant: plant,
+            plantRepository: Provider.of(context, listen: false),
+          ),
       child: Consumer<PlantNotificationsViewModel>(
         builder: (context, viewModel, _) {
           final notifications = viewModel.notifications;

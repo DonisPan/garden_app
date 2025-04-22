@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -329,6 +331,48 @@ class SupabaseService {
           .eq('user_id', userId!);
       return deleteRespone.toString();
     } catch (error) {
+      return error.toString();
+    }
+  }
+
+  Future<int?> getPlantId(int id) async {
+    final userId = await Global().getUserId();
+    try {
+      final Map<String, dynamic>? row =
+          await Supabase.instance.client
+              .from('ga_user_plants')
+              .select('id')
+              .eq('plant_id', id)
+              .eq('user_id', userId!)
+              .maybeSingle();
+
+      if (row != null && row['id'] != null) {
+        return row['id'] as int;
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  Future<String?> addNotification(PlantNotification notification) async {
+    debugPrint(
+      "Notification: ${notification.id} ${notification.plantId} ${notification.repeatEveryDays ?? 0} ${notification.startDate} ${notification.message}",
+    );
+    try {
+      final response = await Supabase.instance.client
+          .from('ga_user_reminders')
+          .insert({
+            'plant_id': await getPlantId(notification.plantId),
+            'frequency': notification.repeatEveryDays ?? 0,
+            'next_due_date': notification.startDate.toIso8601String(),
+            'message': notification.message,
+          });
+
+      debugPrint(response.toString());
+      return response.toString();
+    } catch (error) {
+      debugPrint(error.toString());
       return error.toString();
     }
   }

@@ -1,3 +1,4 @@
+import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
 
@@ -16,6 +17,8 @@ abstract class PlantRepository {
     int? plantFamily,
   );
   Future<String?> removePlant(int id);
+
+  Future<String?> addNotification(PlantNotification notification);
 
   Future<String?> changeClass(int id, String newClass);
   Future<String?> changeFamily(int id, String newFamily);

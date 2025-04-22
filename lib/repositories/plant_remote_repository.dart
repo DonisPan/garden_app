@@ -1,3 +1,4 @@
+import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
@@ -70,5 +71,10 @@ class PlantRemoteRepository implements PlantRepository {
   @override
   Future<String?> addPlant(int id, String? customName) async {
     return await SupabaseService().addPlant(customName, id: id);
+  }
+
+  @override
+  Future<String?> addNotification(PlantNotification notification) async {
+    return await SupabaseService().addNotification(notification);
   }
 }

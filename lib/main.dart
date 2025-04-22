@@ -55,13 +55,6 @@ void main() async {
     );
   }
 
-  // await LocalNotificationsService.scheduleNotification(
-  //   id: 1,
-  //   body: 'Application started',
-  //   title: 'Notification test',
-  //   scheduledDate: DateTime.now().add(Duration(seconds: 30)),
-  // );
-
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('sk')],
