@@ -2,6 +2,7 @@ import 'package:garden_app/models/notification.dart';
 
 class Plant {
   final int _id;
+  int? userPlantId;
   final String _name;
   final String? _note;
   final PlantClass? _plantClass;

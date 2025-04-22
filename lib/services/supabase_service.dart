@@ -69,7 +69,7 @@ class SupabaseService {
       await Global().delUserSession();
       Global.unAuthorize();
     } catch (error) {
-      print('Logout failed: $error');
+      debugPrint('Logout failed: $error');
       rethrow;
     }
   }
@@ -116,7 +116,7 @@ class SupabaseService {
         surname: data['surname'] as String,
       );
     } catch (error) {
-      print('error fetching user: $error');
+      debugPrint('error fetching user: $error');
       rethrow;
     }
   }
@@ -162,9 +162,53 @@ class SupabaseService {
             );
           }).toList();
 
+      // reminders
+      final userPlantResp = await Supabase.instance.client
+          .from('ga_user_plants')
+          .select('id')
+          .eq('user_id', userId);
+
+      final userPlantIds =
+          (userPlantResp as List<dynamic>).map((r) => r['id'] as int).toList();
+
+      final reminderResp = await Supabase.instance.client
+          .from('ga_user_reminders')
+          .select('id, plant_id, frequency, next_due_date, message')
+          .filter(
+            'plant_id',
+            'in',
+            '(${userPlantIds.join(',')})',
+          ); // select reminders only for current user
+
+      final reminderData = reminderResp as List<dynamic>;
+
+      // map to PlantNotification
+      final allReminders = reminderData.map<PlantNotification>((raw) {
+        final m = raw as Map<String, dynamic>;
+        return PlantNotification(
+          id: m['id'] as int,
+          plantId: m['plant_id'] as int,
+          message: m['message'] as String,
+          startDate: DateTime.parse(m['next_due_date'] as String),
+          repeatEveryDays:
+              (m['frequency'] as int?) == 0 ? null : (m['frequency'] as int?),
+        );
+      });
+
+      // group by plantId
+      final Map<int, List<PlantNotification>> byPlant = {};
+      for (var r in allReminders) {
+        byPlant.putIfAbsent(r.plantId, () => []).add(r);
+      }
+
+      // attach notifications
+      for (var plant in plants) {
+        plant.notifications = byPlant[await getPlantId(plant.id)] ?? [];
+      }
+
       return plants;
     } catch (error) {
-      print('error fetching plants: $error');
+      debugPrint('error fetching plants: $error');
       rethrow;
     }
   }
@@ -179,7 +223,7 @@ class SupabaseService {
       final data = response as List<dynamic>;
       return Statistics(parPlantCount: data.length);
     } catch (error) {
-      print('error fetching statistics: $error');
+      debugPrint('error fetching statistics: $error');
       rethrow;
     }
   }
@@ -223,7 +267,7 @@ class SupabaseService {
 
       return plants;
     } catch (error) {
-      print('error fetching plants: $error');
+      debugPrint('error fetching plants: $error');
       rethrow;
     }
   }
@@ -246,7 +290,7 @@ class SupabaseService {
 
       return classes;
     } catch (error) {
-      print('error fetching classes: $error');
+      debugPrint('error fetching classes: $error');
       rethrow;
     }
   }
@@ -270,7 +314,7 @@ class SupabaseService {
 
       return families;
     } catch (error) {
-      print('error fetching classes: $error');
+      debugPrint('error fetching classes: $error');
       rethrow;
     }
   }
@@ -355,25 +399,56 @@ class SupabaseService {
     }
   }
 
-  Future<String?> addNotification(PlantNotification notification) async {
-    debugPrint(
-      "Notification: ${notification.id} ${notification.plantId} ${notification.repeatEveryDays ?? 0} ${notification.startDate} ${notification.message}",
-    );
-    try {
-      final response = await Supabase.instance.client
-          .from('ga_user_reminders')
-          .insert({
-            'plant_id': await getPlantId(notification.plantId),
-            'frequency': notification.repeatEveryDays ?? 0,
-            'next_due_date': notification.startDate.toIso8601String(),
-            'message': notification.message,
-          });
+  // Future<String?> addNotification(PlantNotification notification) async {
+  //   try {
+  //     final response = await Supabase.instance.client
+  //         .from('ga_user_reminders')
+  //         .insert({
+  //           'plant_id': await getPlantId(notification.plantId),
+  //           'frequency': notification.repeatEveryDays ?? 0,
+  //           'next_due_date': notification.startDate.toIso8601String(),
+  //           'message': notification.message,
+  //         });
 
-      debugPrint(response.toString());
-      return response.toString();
+  //     return response.toString();
+  //   } catch (error) {
+  //     return error.toString();
+  //   }
+  // }
+
+  Future<PlantNotification?> addPlantNotification(
+    int plantId,
+    String message,
+    DateTime startDate,
+    int? repeatEveryDays,
+  ) async {
+    try {
+      final response =
+          await Supabase.instance.client
+              .from('ga_user_reminders')
+              .insert({
+                'plant_id': await getPlantId(plantId),
+                'frequency': repeatEveryDays ?? 0,
+                'next_due_date': startDate.toIso8601String(),
+                'message': message,
+              })
+              .select('id, plant_id, frequency, next_due_date, message')
+              .single();
+
+      final Map<String, dynamic> m = response;
+      return PlantNotification(
+        id: m['id'] as int,
+        plantId: m['plant_id'] as int, // this is the userPlantId
+        message: m['message'] as String,
+        startDate: DateTime.parse(m['next_due_date'] as String),
+        repeatEveryDays:
+            (m['frequency'] as int?) == 0 ? null : (m['frequency'] as int?),
+        isActive: true,
+      );
     } catch (error) {
-      debugPrint(error.toString());
-      return error.toString();
+      rethrow;
     }
   }
+
+  Future<String?> removeNotification(PlantNotification notification) async {}
 }

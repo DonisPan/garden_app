@@ -18,7 +18,14 @@ abstract class PlantRepository {
   );
   Future<String?> removePlant(int id);
 
-  Future<String?> addNotification(PlantNotification notification);
+  // Future<String?> addNotification(PlantNotification notification);
+  Future<PlantNotification?> addPlantNotification(
+    int plantId,
+    String message,
+    DateTime startDate,
+    int? repeatEveryDays,
+  );
+  Future<String?> removeNotification(PlantNotification notification);
 
   Future<String?> changeClass(int id, String newClass);
   Future<String?> changeFamily(int id, String newFamily);

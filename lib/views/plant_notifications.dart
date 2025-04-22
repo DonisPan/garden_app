@@ -23,7 +23,7 @@ class PlantNotificationsPage extends StatelessWidget {
           ),
       child: Consumer<PlantNotificationsViewModel>(
         builder: (context, viewModel, _) {
-          final notifications = viewModel.notifications;
+          var notifications = viewModel.notifications;
           return Scaffold(
             appBar: TopBar(
               title: 'notifications.title'.tr(),

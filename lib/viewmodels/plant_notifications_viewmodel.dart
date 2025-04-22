@@ -36,15 +36,13 @@ class PlantNotificationsViewModel extends ChangeNotifier {
     required DateTime startDate,
     required int? repeatEveryDays,
   }) async {
-    final notification = PlantNotification(
-      id: _generateNotificationId(),
-      plantId: plant.id,
-      message: message,
-      startDate: startDate,
-      repeatEveryDays: repeatEveryDays,
+    final notification = await plantRepository.addPlantNotification(
+      plant.id,
+      message,
+      startDate,
+      repeatEveryDays,
     );
-    plant.addNotification(notification);
-    plantRepository.addNotification(notification);
+    plant.addNotification(notification!);
     await _scheduleSystemNotification(notification);
     notifyListeners();
   }
@@ -83,14 +81,9 @@ class PlantNotificationsViewModel extends ChangeNotifier {
 
   Future<void> deleteNotification(PlantNotification notification) async {
     await LocalNotificationsService.cancelNotification(notification.id);
+    plantRepository.removeNotification(notification);
     plant.removeNotification(notification);
-    // plantRepository.removeNotification(notification);
     notifyListeners();
-  }
-
-  int _generateNotificationId() {
-    final int low = DateTime.now().millisecondsSinceEpoch % 1000000;
-    return plant.id * 1000000 + low;
   }
 
   void editNotification(BuildContext context, PlantNotification notification) {
