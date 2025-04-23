@@ -10,8 +10,7 @@ import 'package:garden_app/widgets/top_bar.dart';
 class PlantNotificationsPage extends StatelessWidget {
   final Plant plant;
 
-  const PlantNotificationsPage({Key? key, required this.plant})
-    : super(key: key);
+  const PlantNotificationsPage({super.key, required this.plant});
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +104,9 @@ class PlantNotificationsPage extends StatelessWidget {
                       '${'notifications.frequency'.tr()}: ${notification.frequencyDescription}',
                       style: const TextStyle(color: Colors.black87),
                     ),
-                    if (notification.nextOccurrence != null) ...[
+                    ...[
                       Text(
-                        '${'notifications.next'.tr()}: ${DateFormat.yMMMd().add_jm().format(notification.nextOccurrence!)}',
+                        '${'notifications.next'.tr()}: ${DateFormat.yMMMd().add_jm().format(notification.nextOccurrence)}',
                         style: const TextStyle(color: Colors.black87),
                       ),
                     ],
@@ -116,12 +115,6 @@ class PlantNotificationsPage extends StatelessWidget {
               ),
               Column(
                 children: [
-                  Switch(
-                    value: notification.isActive,
-                    onChanged:
-                        (_) => viewModel.toggleNotification(notification),
-                  ),
-                  const SizedBox(height: 8),
                   IconButton(
                     icon: SvgPicture.asset(
                       'assets/svgs/trash.svg',

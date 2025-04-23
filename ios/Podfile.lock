@@ -4,6 +4,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_native_timezone (0.0.1):
+    - Flutter
   - flutter_secure_storage (6.0.0):
     - Flutter
   - image_picker_ios (0.0.1):
@@ -26,6 +28,7 @@ DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_native_timezone (from `.symlinks/plugins/flutter_native_timezone/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - image_picker_ios (from `.symlinks/plugins/image_picker_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -41,6 +44,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_native_timezone:
+    :path: ".symlinks/plugins/flutter_native_timezone/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   image_picker_ios:
@@ -60,6 +65,7 @@ SPEC CHECKSUMS:
   app_links: 76b66b60cc809390ca1ad69bfd66b998d2387ac7
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_local_notifications: a5a732f069baa862e728d839dd2ebb904737effb
+  flutter_native_timezone: 5fe32678d72d1894880e94303ef41c2919f014e5
   flutter_secure_storage: 1ed9476fba7e7a782b22888f956cce43e2c62f13
   image_picker_ios: 7fe1ff8e34c1790d6fff70a32484959f563a928a
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564

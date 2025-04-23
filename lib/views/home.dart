@@ -57,30 +57,6 @@ class HomePage extends StatelessWidget {
                           color: Colors.black,
                         ),
                       ),
-                      suffixIcon: SizedBox(
-                        width: 60,
-                        child: IntrinsicHeight(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              const VerticalDivider(
-                                color: Colors.black,
-                                indent: 10,
-                                endIndent: 10,
-                                thickness: 2,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: SvgPicture.asset(
-                                  'assets/svgs/filters.svg',
-                                  height: 20,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                       filled: true,
                       fillColor: Colors.white,
                       contentPadding: const EdgeInsets.all(12),
@@ -174,11 +150,6 @@ class HomePage extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        // water button
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.water_drop),
                                         ),
                                       ],
                                     ),

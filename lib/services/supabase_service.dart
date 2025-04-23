@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
+import 'package:garden_app/services/local_notification_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:garden_app/services/global.dart';
 import 'package:garden_app/models/profile.dart';
@@ -53,6 +54,10 @@ class SupabaseService {
         final token = response.session?.refreshToken;
         await Global().setUserSession(token!, id['id'] as int);
         Global.authorize();
+        // schedule notifications
+        await LocalNotificationsService.rescheduleAll(
+          await SupabaseService().getAllNotifications(),
+        );
         return null;
       } else {
         throw Exception('No Session Found!');
@@ -399,23 +404,6 @@ class SupabaseService {
     }
   }
 
-  // Future<String?> addNotification(PlantNotification notification) async {
-  //   try {
-  //     final response = await Supabase.instance.client
-  //         .from('ga_user_reminders')
-  //         .insert({
-  //           'plant_id': await getPlantId(notification.plantId),
-  //           'frequency': notification.repeatEveryDays ?? 0,
-  //           'next_due_date': notification.startDate.toIso8601String(),
-  //           'message': notification.message,
-  //         });
-
-  //     return response.toString();
-  //   } catch (error) {
-  //     return error.toString();
-  //   }
-  // }
-
   Future<PlantNotification?> addPlantNotification(
     int plantId,
     String message,
@@ -450,5 +438,51 @@ class SupabaseService {
     }
   }
 
-  Future<String?> removeNotification(PlantNotification notification) async {}
+  Future<String?> removeNotification(PlantNotification notification) async {
+    try {
+      final response = await Supabase.instance.client
+          .from('ga_user_reminders')
+          .delete()
+          .eq('id', notification.id);
+
+      return response.toString();
+    } catch (error) {
+      debugPrint('removeNotification error: $error');
+      return error.toString();
+    }
+  }
+
+  Future<List<PlantNotification>> getAllNotifications() async {
+    // 1) Find all ga_user_plants IDs for this user
+    final userId = await Global().getUserId();
+    final userPlantsResponse = await Supabase.instance.client
+        .from('ga_user_plants')
+        .select('id')
+        .eq('user_id', userId!);
+    final userPlantIds =
+        (userPlantsResponse as List).map((r) => r['id'] as int).toList();
+
+    if (userPlantIds.isEmpty) return [];
+
+    // 2) Fetch reminders for those plants
+    final response = await Supabase.instance.client
+        .from('ga_user_reminders')
+        .select('id, plant_id, frequency, next_due_date, message')
+        .filter('plant_id', 'in', '(${userPlantIds.join(',')})')
+        .order('next_due_date', ascending: true);
+    final remData = response as List<dynamic>;
+
+    // 3) Map into PlantNotification
+    return remData.map((raw) {
+      final m = raw as Map<String, dynamic>;
+      return PlantNotification(
+        id: m['id'] as int,
+        plantId: m['plant_id'] as int,
+        message: m['message'] as String,
+        startDate: DateTime.parse(m['next_due_date'] as String),
+        repeatEveryDays:
+            (m['frequency'] as int) == 0 ? null : (m['frequency'] as int),
+      );
+    }).toList();
+  }
 }

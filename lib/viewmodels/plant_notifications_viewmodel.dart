@@ -10,75 +10,86 @@ class PlantNotificationsViewModel extends ChangeNotifier {
   final Plant plant;
   final PlantRepository plantRepository;
 
+  // *** form state backing fields ***
+  DateTime _pickDate;
+  TimeOfDay _pickTime;
+  bool _repeat;
+  int _days;
+
+  // Message controller for the notification message input
+  final TextEditingController messageController;
+
+  // Constructor initializes state
   PlantNotificationsViewModel({
     required this.plant,
     required this.plantRepository,
-  });
+  }) : _pickDate = DateTime.now(),
+       _pickTime = TimeOfDay.now(),
+       _repeat = false,
+       _days = 1,
+       messageController = TextEditingController();
 
+  // Public getters and setters with notification
+  DateTime get pickDate => _pickDate;
+  set pickDate(DateTime val) {
+    _pickDate = val;
+    notifyListeners();
+  }
+
+  TimeOfDay get pickTime => _pickTime;
+  set pickTime(TimeOfDay val) {
+    _pickTime = val;
+    notifyListeners();
+  }
+
+  bool get repeat => _repeat;
+  set repeat(bool val) {
+    _repeat = val;
+    notifyListeners();
+  }
+
+  int get days => _days;
+  set days(int val) {
+    _days = val;
+    notifyListeners();
+  }
+
+  // List of existing notifications for the plant
   List<PlantNotification> get notifications => plant.notifications;
 
+  // Schedule with the OS
   Future<void> _scheduleSystemNotification(
     PlantNotification notification,
   ) async {
     await LocalNotificationsService.scheduleNotification(
       id: notification.id,
-      title: 'Water ${plant.name}',
+      title: plant.name,
       body: notification.message,
       scheduledDate: notification.nextOccurrence,
-      payload: 'water_plant_${plant.id}_${notification.id}',
+      payload: '${plant.id}_${notification.id}',
       matchDateTimeComponents:
           notification.repeatEveryDays != null ? DateTimeComponents.time : null,
     );
   }
 
+  // Create a new reminder
   Future<void> addNotification({
     required String message,
     required DateTime startDate,
     required int? repeatEveryDays,
   }) async {
-    final notification = await plantRepository.addPlantNotification(
+    final newNotification = await plantRepository.addPlantNotification(
       plant.id,
       message,
       startDate,
       repeatEveryDays,
     );
-    plant.addNotification(notification!);
-    await _scheduleSystemNotification(notification);
+    plant.addNotification(newNotification!);
+    await _scheduleSystemNotification(newNotification);
     notifyListeners();
   }
 
-  Future<void> updateNotification({
-    required PlantNotification notification,
-    required String message,
-    required DateTime startDate,
-    required int? repeatEveryDays,
-  }) async {
-    await LocalNotificationsService.cancelNotification(notification.id);
-    final updated = notification.copyWith(
-      message: message,
-      startDate: startDate,
-      repeatEveryDays: repeatEveryDays,
-    );
-    final idx = plant.notifications.indexOf(notification);
-    plant.notifications[idx] = updated;
-    if (updated.isActive) {
-      await _scheduleSystemNotification(updated);
-    }
-    notifyListeners();
-  }
-
-  Future<void> toggleNotification(PlantNotification notification) async {
-    final updated = notification.copyWith(isActive: !notification.isActive);
-    final idx = plant.notifications.indexOf(notification);
-    plant.notifications[idx] = updated;
-    if (notification.isActive) {
-      await LocalNotificationsService.cancelNotification(notification.id);
-    } else {
-      await _scheduleSystemNotification(updated);
-    }
-    notifyListeners();
-  }
-
+  // Delete reminder permanently
   Future<void> deleteNotification(PlantNotification notification) async {
     await LocalNotificationsService.cancelNotification(notification.id);
     plantRepository.removeNotification(notification);
@@ -86,15 +97,8 @@ class PlantNotificationsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void editNotification(BuildContext context, PlantNotification notification) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => AddPlantNotificationPage(plant: plant)),
-    );
-  }
-
-  void leftButton(BuildContext context) {
-    Navigator.of(context).pop();
-  }
+  // Navigation helpers
+  void leftButton(BuildContext context) => Navigator.of(context).pop();
 
   void rightButton(BuildContext context) {
     Navigator.of(context).push(

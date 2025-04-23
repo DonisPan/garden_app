@@ -15,6 +15,7 @@ import 'package:garden_app/views/plant_notifications.dart';
 import 'package:garden_app/views/profile.dart';
 import 'package:garden_app/views/register.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,9 +31,9 @@ void main() async {
   await LocalNotificationsService.initialize(
     onDidReceiveNotificationResponse: (response) {
       // This handles when user taps on a notification
-      print('Notification tapped!');
-      print('ID: ${response.id}');
-      print('Payload: ${response.payload}');
+      debugPrint('Notification tapped!');
+      debugPrint('ID: ${response.id}');
+      debugPrint('Payload: ${response.payload}');
 
       // You can navigate to specific screens based on the payload
       if (response.payload == 'special') {
@@ -42,7 +43,13 @@ void main() async {
   );
 
   final bool granted = await LocalNotificationsService.requestPermissions();
-  print('Notification permissions granted: $granted');
+  debugPrint('Notification permissions granted: $granted');
+
+  if (Global.isAuthorized()) {
+    await LocalNotificationsService.rescheduleAll(
+      await SupabaseService().getAllNotifications(),
+    );
+  }
 
   // Check if app was launched via notification
   final launchDetails =

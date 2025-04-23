@@ -1,20 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/plant.dart';
-import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/viewmodels/plant_notifications_viewmodel.dart';
 import 'package:garden_app/widgets/top_bar.dart';
 import 'package:provider/provider.dart';
 
 class AddPlantNotificationPage extends StatelessWidget {
-  const AddPlantNotificationPage({
-    Key? key,
-    required this.plant,
-    this.notification,
-  }) : super(key: key);
+  const AddPlantNotificationPage({Key? key, required this.plant})
+    : super(key: key);
 
   final Plant plant;
-  final PlantNotification? notification;
 
   @override
   Widget build(BuildContext context) {
@@ -25,30 +20,21 @@ class AddPlantNotificationPage extends StatelessWidget {
             plantRepository: Provider.of(context, listen: false),
           ),
       child: Consumer<PlantNotificationsViewModel>(
-        builder: (context, viewModel, child) {
-          // controllers and state
-          final messageCtrl = TextEditingController(
-            text: notification?.message ?? '',
-          );
-          DateTime pickDate = notification?.startDate ?? DateTime.now();
-          TimeOfDay pickTime = TimeOfDay.fromDateTime(pickDate);
-          bool repeat = notification?.repeatEveryDays != null;
-          int days = notification?.repeatEveryDays ?? 1;
-
+        builder: (context, viewModel, _) {
           Future<void> selectDate() async {
             final d = await showDatePicker(
               context: context,
-              initialDate: pickDate,
+              initialDate: viewModel.pickDate,
               firstDate: DateTime.now(),
               lastDate: DateTime(2100),
             );
             if (d != null) {
-              pickDate = DateTime(
+              viewModel.pickDate = DateTime(
                 d.year,
                 d.month,
                 d.day,
-                pickTime.hour,
-                pickTime.minute,
+                viewModel.pickTime.hour,
+                viewModel.pickTime.minute,
               );
             }
           }
@@ -56,21 +42,21 @@ class AddPlantNotificationPage extends StatelessWidget {
           Future<void> selectTime() async {
             final t = await showTimePicker(
               context: context,
-              initialTime: pickTime,
+              initialTime: viewModel.pickTime,
             );
-            if (t != null) pickTime = t;
+            if (t != null) viewModel.pickTime = t;
           }
 
           Widget _buildTextField({
             required TextEditingController controller,
-            required String? label,
-            bool readOnly = false,
+            required String label,
+            TextInputType keyboardType = TextInputType.text,
           }) {
             return Container(
               margin: const EdgeInsets.only(top: 10),
               child: TextField(
                 controller: controller,
-                readOnly: readOnly,
+                keyboardType: keyboardType,
                 decoration: InputDecoration(
                   labelText: label,
                   filled: true,
@@ -85,12 +71,16 @@ class AddPlantNotificationPage extends StatelessWidget {
                     borderSide: const BorderSide(color: Colors.black, width: 2),
                   ),
                 ),
+                onChanged: (text) {
+                  if (controller == viewModel.messageController) return;
+                  final val = int.tryParse(text) ?? 1;
+                  viewModel.days = val;
+                },
               ),
             );
           }
 
           Widget _buildPicker({
-            required String label,
             required String value,
             required VoidCallback onTap,
           }) {
@@ -120,10 +110,7 @@ class AddPlantNotificationPage extends StatelessWidget {
 
           return Scaffold(
             appBar: TopBar(
-              title:
-                  notification == null
-                      ? 'notifications.add_title'.tr()
-                      : 'notifications.edit_title'.tr(),
+              title: 'notifications.add_title'.tr(),
               leftIcon: 'assets/svgs/back.svg',
               onLeftButtonTap: () => viewModel.leftButton(context),
               showRightButton: false,
@@ -134,17 +121,15 @@ class AddPlantNotificationPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildTextField(
-                    controller: messageCtrl,
+                    controller: viewModel.messageController,
                     label: 'notifications.message_label'.tr(),
                   ),
                   _buildPicker(
-                    label: 'notifications.date'.tr(),
-                    value: DateFormat.yMMMd().format(pickDate),
+                    value: DateFormat.yMMMd().format(viewModel.pickDate),
                     onTap: selectDate,
                   ),
                   _buildPicker(
-                    label: 'notifications.time'.tr(),
-                    value: pickTime.format(context),
+                    value: viewModel.pickTime.format(context),
                     onTap: selectTime,
                   ),
                   Row(
@@ -154,46 +139,19 @@ class AddPlantNotificationPage extends StatelessWidget {
                         'notifications.repeat'.tr(),
                         style: const TextStyle(fontSize: 16),
                       ),
-                      Switch(value: repeat, onChanged: (v) => repeat = v),
+                      Switch(
+                        value: viewModel.repeat,
+                        onChanged: (newVal) => viewModel.repeat = newVal,
+                      ),
                     ],
                   ),
-                  if (repeat)
-                    DropdownButtonFormField<int>(
-                      value: days,
-                      items:
-                          [1, 7, 14, 30]
-                              .map(
-                                (d) => DropdownMenuItem(
-                                  value: d,
-                                  child: Text(
-                                    d == 1
-                                        ? '1 ${'day'.tr()}'
-                                        : '$d ${'days'.tr()}',
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                      onChanged: (v) => days = v ?? 1,
-                      decoration: InputDecoration(
-                        labelText: 'notifications.repeat_every'.tr(),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.all(12),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                        ),
+                  if (viewModel.repeat)
+                    _buildTextField(
+                      controller: TextEditingController(
+                        text: viewModel.days.toString(),
                       ),
+                      label: 'notifications.repeat_every_days'.tr(),
+                      keyboardType: TextInputType.number,
                     ),
                 ],
               ),
@@ -205,26 +163,17 @@ class AddPlantNotificationPage extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () {
                     final dt = DateTime(
-                      pickDate.year,
-                      pickDate.month,
-                      pickDate.day,
-                      pickTime.hour,
-                      pickTime.minute,
+                      viewModel.pickDate.year,
+                      viewModel.pickDate.month,
+                      viewModel.pickDate.day,
+                      viewModel.pickTime.hour,
+                      viewModel.pickTime.minute,
                     );
-                    if (notification == null) {
-                      viewModel.addNotification(
-                        message: messageCtrl.text,
-                        startDate: dt,
-                        repeatEveryDays: repeat ? days : null,
-                      );
-                    } else {
-                      viewModel.updateNotification(
-                        notification: notification!,
-                        message: messageCtrl.text,
-                        startDate: dt,
-                        repeatEveryDays: repeat ? days : null,
-                      );
-                    }
+                    viewModel.addNotification(
+                      message: viewModel.messageController.text,
+                      startDate: dt,
+                      repeatEveryDays: viewModel.repeat ? viewModel.days : null,
+                    );
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(

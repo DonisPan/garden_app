@@ -75,7 +75,8 @@
       "repeat": "Opakovať",
       "save": "Uložiť",
       "date": "Dátum",
-      "time": "Čas"
+      "time": "Čas",
+      "repeat_every_days": "Opakovať každých x dní"
     }
   }
   
