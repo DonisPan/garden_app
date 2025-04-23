@@ -1,3 +1,4 @@
+import 'package:garden_app/models/admin_announcer.dart';
 import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
@@ -96,5 +97,12 @@ class PlantRemoteRepository implements PlantRepository {
       startDate,
       repeatEveryDays,
     );
+  }
+
+  @override
+  Future<List<AdminAnnouncer>> getSpecialAnnouncers(
+    List<Plant> userPlants,
+  ) async {
+    return await SupabaseService().getSpecialAnnouncers(userPlants);
   }
 }

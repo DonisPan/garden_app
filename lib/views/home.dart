@@ -57,6 +57,53 @@ class HomePage extends StatelessWidget {
                           color: Colors.black,
                         ),
                       ),
+                      suffixIcon: IntrinsicHeight(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // notifications button with badge
+                            Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                IconButton(
+                                  icon: SvgPicture.asset(
+                                    'assets/svgs/bell.svg',
+                                    height: 20,
+                                    color: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    viewModel.openSpecialAnnouncers(context);
+                                  }, // no-op for now
+                                ),
+                                if (viewModel.specialAnnouncers.isNotEmpty)
+                                  Positioned(
+                                    right: 4,
+                                    top: 4,
+                                    child: Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 16,
+                                        minHeight: 16,
+                                      ),
+                                      child: Text(
+                                        '${viewModel.specialAnnouncers.length}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
                       filled: true,
                       fillColor: Colors.white,
                       contentPadding: const EdgeInsets.all(12),

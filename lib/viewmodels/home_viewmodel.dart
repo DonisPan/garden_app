@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:garden_app/models/admin_announcer.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
 import 'package:garden_app/services/global.dart';
+import 'package:garden_app/viewmodels/special_announcers_viewmodel.dart';
+import 'package:garden_app/views/special_announcers.dart';
+import 'package:provider/provider.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final PlantRepository plantRepository;
@@ -14,6 +18,8 @@ class HomeViewModel extends ChangeNotifier {
   List<Plant> get plants => _plants;
   List<Plant> _filteredPlants = [];
   List<Plant> get filteredPlants => _filteredPlants;
+
+  List<AdminAnnouncer> specialAnnouncers = [];
 
   HomeViewModel({required this.plantRepository, required this.authRepository}) {
     fetchPlants();
@@ -56,11 +62,33 @@ class HomeViewModel extends ChangeNotifier {
     _plants = await plantRepository.getPlants(userId);
     _filteredPlants = _plants;
     notifyListeners();
+    fetchAnnouncers();
   }
 
   @override
   void dispose() {
     searchQueryController.dispose();
     super.dispose();
+  }
+
+  Future<void> fetchAnnouncers() async {
+    specialAnnouncers = await plantRepository.getSpecialAnnouncers(plants);
+    notifyListeners();
+  }
+
+  void openSpecialAnnouncers(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:
+            (ctx) => ChangeNotifierProvider(
+              create:
+                  (_) => SpecialAnnouncersViewModel(
+                    plantRepository: context.read<PlantRepository>(),
+                    announcers: specialAnnouncers,
+                  ),
+              child: const SpecialAnnouncersPage(),
+            ),
+      ),
+    );
   }
 }

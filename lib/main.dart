@@ -14,6 +14,7 @@ import 'package:garden_app/views/login.dart';
 import 'package:garden_app/views/plant_notifications.dart';
 import 'package:garden_app/views/profile.dart';
 import 'package:garden_app/views/register.dart';
+import 'package:garden_app/views/special_announcers.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/timezone.dart' as tz;
 

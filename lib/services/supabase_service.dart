@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:garden_app/models/admin_announcer.dart';
 import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
@@ -484,5 +485,78 @@ class SupabaseService {
             (m['frequency'] as int) == 0 ? null : (m['frequency'] as int),
       );
     }).toList();
+  }
+
+  Future<List<AdminAnnouncer>> getSpecialAnnouncers(
+    List<Plant> userPlants,
+  ) async {
+    try {
+      // 1) Grab all announcers
+      final response = await Supabase.instance.client
+          .from('ga_announcers')
+          .select('family, message');
+      final rawList = response as List<dynamic>;
+
+      // 2) Build a lookup: familyId → plant names you own
+      final Map<int, List<String>> familyIdToPlantNames = {};
+      for (var p in userPlants) {
+        final fam = p.plantFamily?.id;
+        if (fam != null) {
+          familyIdToPlantNames.putIfAbsent(fam, () => []).add(p.name);
+        }
+      }
+      if (familyIdToPlantNames.isEmpty) return [];
+
+      // 3) Filter & map
+      final result = <AdminAnnouncer>[];
+      for (var raw in rawList) {
+        final row = raw as Map<String, dynamic>;
+        final famField = row['family'];
+
+        // normalize the family field into a List<int>
+        List<int> famIds;
+        if (famField is List<dynamic>) {
+          // sometimes the driver returns an actual list
+          famIds = List<int>.from(famField.cast<dynamic>());
+        } else if (famField is int) {
+          // single family ID
+          famIds = [famField];
+        } else if (famField is String) {
+          // PostgREST sometimes returns "{3,7}" as a string
+          var raw = famField.trim();
+          if (raw.startsWith('{') && raw.endsWith('}')) {
+            raw = raw.substring(1, raw.length - 1);
+          }
+          famIds =
+              raw
+                  .split(',')
+                  .map((s) => int.tryParse(s.trim()))
+                  .whereType<int>()
+                  .toList();
+        } else {
+          famIds = [];
+        }
+
+        // collect the plant names for any shared family IDs
+        final plantNames = <String>{};
+        for (var fid in famIds) {
+          final names = familyIdToPlantNames[fid];
+          if (names != null) plantNames.addAll(names);
+        }
+
+        if (plantNames.isNotEmpty) {
+          result.add(
+            AdminAnnouncer(
+              plantNames: plantNames.toList(),
+              message: row['message'] as String,
+            ),
+          );
+        }
+      }
+      return result;
+    } catch (e) {
+      debugPrint('Error fetching special announcers: $e');
+      return [];
+    }
   }
 }

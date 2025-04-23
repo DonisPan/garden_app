@@ -77,6 +77,10 @@
       "date": "Dátum",
       "time": "Čas",
       "repeat_every_days": "Opakovať každých x dní"
+    },
+    "announcers": {
+      "title": "Špeciálne upozornenia",
+      "none": "Pre tvoje rastliny momentálne neexistujú špeciálne upozornenia"
     }
   }
   

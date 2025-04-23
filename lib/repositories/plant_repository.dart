@@ -1,3 +1,4 @@
+import 'package:garden_app/models/admin_announcer.dart';
 import 'package:garden_app/models/notification.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/models/statistics.dart';
@@ -26,6 +27,8 @@ abstract class PlantRepository {
     int? repeatEveryDays,
   );
   Future<String?> removeNotification(PlantNotification notification);
+
+  Future<List<AdminAnnouncer>> getSpecialAnnouncers(List<Plant> userPlants);
 
   Future<String?> changeClass(int id, String newClass);
   Future<String?> changeFamily(int id, String newFamily);
