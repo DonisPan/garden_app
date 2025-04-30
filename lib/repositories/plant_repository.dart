@@ -19,7 +19,6 @@ abstract class PlantRepository {
   );
   Future<String?> removePlant(int id);
 
-  // Future<String?> addNotification(PlantNotification notification);
   Future<PlantNotification?> addPlantNotification(
     int plantId,
     String message,

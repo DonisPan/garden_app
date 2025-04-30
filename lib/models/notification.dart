@@ -17,6 +17,7 @@ class PlantNotification {
     this.isActive = true,
   });
 
+  // chooses descriptor for repeatable notification
   String get frequencyDescription {
     if (repeatEveryDays == null) {
       return 'notifications.frequency_descriptor.one_time'.tr();
@@ -27,23 +28,23 @@ class PlantNotification {
     return "${'notifications.frequency_descriptor.every'.tr()} $repeatEveryDays ${'notifications.frequency_descriptor.days'.tr()}";
   }
 
-  List<DateTime> getNextOccurrences(int count) {
-    final occurrences = <DateTime>[];
-    var current = startDate;
+  // List<DateTime> getNextOccurrences(int count) {
+  //   final occurrences = <DateTime>[];
+  //   var current = startDate;
 
-    for (int i = 0; i < count; i++) {
-      if (current.isAfter(DateTime.now())) {
-        occurrences.add(current);
-      }
-      if (repeatEveryDays != null) {
-        current = current.add(Duration(days: repeatEveryDays!));
-      } else {
-        break; // No repeats
-      }
-    }
+  //   for (int i = 0; i < count; i++) {
+  //     if (current.isAfter(DateTime.now())) {
+  //       occurrences.add(current);
+  //     }
+  //     if (repeatEveryDays != null) {
+  //       current = current.add(Duration(days: repeatEveryDays!));
+  //     } else {
+  //       break; // No repeats
+  //     }
+  //   }
 
-    return occurrences;
-  }
+  //   return occurrences;
+  // }
 
   DateTime get nextOccurrence {
     final now = DateTime.now();
@@ -51,25 +52,25 @@ class PlantNotification {
 
     if (repeatEveryDays == null) return startDate;
 
-    // Calculate next occurrence after today
+    // calculate next occurrence after today
     final daysSinceStart = now.difference(startDate).inDays;
     final intervals = (daysSinceStart / repeatEveryDays!).ceil();
     return startDate.add(Duration(days: intervals * repeatEveryDays!));
   }
 
-  PlantNotification copyWith({
-    String? message,
-    DateTime? startDate,
-    int? repeatEveryDays,
-    bool? isActive,
-  }) {
-    return PlantNotification(
-      id: id,
-      plantId: plantId,
-      message: message ?? this.message,
-      startDate: startDate ?? this.startDate,
-      repeatEveryDays: repeatEveryDays ?? this.repeatEveryDays,
-      isActive: isActive ?? this.isActive,
-    );
-  }
+  //   PlantNotification copyWith({
+  //     String? message,
+  //     DateTime? startDate,
+  //     int? repeatEveryDays,
+  //     bool? isActive,
+  //   }) {
+  //     return PlantNotification(
+  //       id: id,
+  //       plantId: plantId,
+  //       message: message ?? this.message,
+  //       startDate: startDate ?? this.startDate,
+  //       repeatEveryDays: repeatEveryDays ?? this.repeatEveryDays,
+  //       isActive: isActive ?? this.isActive,
+  //     );
+  //   }
 }

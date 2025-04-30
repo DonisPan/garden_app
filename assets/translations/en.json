@@ -65,7 +65,19 @@
       "no": "No"
     },
     "delete_plant": "Delete Plant",
+    "delete_image": {
+      "dialog": "Confirm deletion",
+      "description": "Do you realy want to delete this image?",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
     "manage_notifications": "Manage Notifications",
+    "image_source": {
+        "dialog": "Choose image source",
+        "description": "Choose new image from galery or take a new one",
+        "camera": "Camera",
+        "galery": "Galery"
+      },
     "add_image": "Add Image",
     "no_images": "No images added."
   },

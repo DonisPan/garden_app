@@ -21,10 +21,4 @@ class AuthRemoteRepository implements AuthRepository {
   ) async {
     return await SupabaseService().register(email, password, name, surname);
   }
-
-  @override
-  bool isLoggedIn() {
-    // TODO: implement isLoggedIn
-    throw UnimplementedError();
-  }
 }

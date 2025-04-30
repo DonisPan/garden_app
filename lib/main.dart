@@ -8,15 +8,11 @@ import 'package:garden_app/services/global.dart';
 import 'package:garden_app/services/local_notification_service.dart';
 import 'package:garden_app/services/supabase_service.dart';
 import 'package:garden_app/views/add_plant.dart';
-import 'package:garden_app/views/add_plant_notification.dart';
 import 'package:garden_app/views/home.dart';
 import 'package:garden_app/views/login.dart';
-import 'package:garden_app/views/plant_notifications.dart';
 import 'package:garden_app/views/profile.dart';
 import 'package:garden_app/views/register.dart';
-import 'package:garden_app/views/special_announcers.dart';
 import 'package:provider/provider.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,21 +24,12 @@ void main() async {
   final authRepository = AuthRemoteRepository();
   final plantRepository = PlantRemoteRepository();
 
-  // Initialize notifications service
+  // initialize LocalNotificationsService
   await LocalNotificationsService.initialize(
-    onDidReceiveNotificationResponse: (response) {
-      // This handles when user taps on a notification
-      debugPrint('Notification tapped!');
-      debugPrint('ID: ${response.id}');
-      debugPrint('Payload: ${response.payload}');
-
-      // You can navigate to specific screens based on the payload
-      if (response.payload == 'special') {
-        // Navigator.push(...) to specific screen
-      }
-    },
+    onDidReceiveNotificationResponse: (response) {},
   );
 
+  // request permissions for notifications
   final bool granted = await LocalNotificationsService.requestPermissions();
   debugPrint('Notification permissions granted: $granted');
 
@@ -52,16 +39,16 @@ void main() async {
     );
   }
 
-  // Check if app was launched via notification
-  final launchDetails =
-      await LocalNotificationsService.getNotificationAppLaunchDetails();
-  if (launchDetails?.didNotificationLaunchApp ?? false) {
-    print('App launched via notification');
-    print('Notification ID: ${launchDetails?.notificationResponse?.id}');
-    print(
-      'Notification Payload: ${launchDetails?.notificationResponse?.payload}',
-    );
-  }
+  // // Check if app was launched via notification
+  // final launchDetails =
+  //     await LocalNotificationsService.getNotificationAppLaunchDetails();
+  // if (launchDetails?.didNotificationLaunchApp ?? false) {
+  //   debugPrint('App launched via notification');
+  //   debugPrint('Notification ID: ${launchDetails?.notificationResponse?.id}');
+  //   debugPrint(
+  //     'Notification Payload: ${launchDetails?.notificationResponse?.payload}',
+  //   );
+  // }
 
   runApp(
     EasyLocalization(

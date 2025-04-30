@@ -1,29 +1,11 @@
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:garden_app/repositories/auth_repository.dart';
 import 'package:garden_app/viewmodels/register_viewmodel.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
-
-  Future<void> _selectProfilePicture(BuildContext context) async {
-    final picker = ImagePicker();
-    var status = await Permission.photos.request();
-    if (status.isGranted) {
-      final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-      if (pickedImage != null) {
-        final file = File(pickedImage.path);
-        Provider.of<RegisterViewModel>(
-          context,
-          listen: false,
-        ).setProfilePicture(file);
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +17,6 @@ class RegisterPage extends StatelessWidget {
       child: Consumer<RegisterViewModel>(
         builder: (context, viewModel, child) {
           return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'register.title'.tr(),
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              backgroundColor: Colors.white,
-              elevation: 0.0,
-              iconTheme: const IconThemeData(color: Colors.black),
-            ),
             body: Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -58,26 +27,12 @@ class RegisterPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // profile picture
-                    Center(
-                      child: GestureDetector(
-                        onTap: () => _selectProfilePicture(context),
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.grey[300],
-                          backgroundImage:
-                              viewModel.profilePicture != null
-                                  ? FileImage(viewModel.profilePicture!)
-                                  : null,
-                          child:
-                              viewModel.profilePicture == null
-                                  ? const Icon(
-                                    Icons.camera_alt,
-                                    size: 40,
-                                    color: Colors.white,
-                                  )
-                                  : null,
-                        ),
+                    Text(
+                      'register.title'.tr(),
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                     ),
                     const SizedBox(height: 20),

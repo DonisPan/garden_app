@@ -74,11 +74,6 @@ class PlantRemoteRepository implements PlantRepository {
     return await SupabaseService().addPlant(customName, id: id);
   }
 
-  // @override
-  // Future<String?> addNotification(PlantNotification notification) async {
-  //   return await SupabaseService().addNotification(notification);
-  // }
-
   @override
   Future<String?> removeNotification(PlantNotification notification) async {
     return await SupabaseService().removeNotification(notification);

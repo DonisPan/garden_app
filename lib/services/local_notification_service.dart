@@ -1,20 +1,16 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:garden_app/models/notification.dart';
-import 'package:timezone/data/latest.dart' as tzdata; // data loader
-import 'package:timezone/timezone.dart' as tz; // core api
+import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 class LocalNotificationsService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  // Initialize the notification service
   static Future<void> initialize({
     void Function(NotificationResponse)? onDidReceiveNotificationResponse,
   }) async {
-    // initialize local timezone
-    // tzdata.initializeTimeZones();
     tzdata.initializeTimeZones();
     final String localZone = await FlutterNativeTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(localZone));
@@ -44,7 +40,6 @@ class LocalNotificationsService {
     );
   }
 
-  // Request notification permissions
   static Future<bool> requestPermissions() async {
     final bool? result = await _notificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -54,7 +49,6 @@ class LocalNotificationsService {
     return result ?? false;
   }
 
-  // Show immediate notification
   static Future<void> showNotification({
     required int id,
     required String title,
@@ -97,12 +91,11 @@ class LocalNotificationsService {
     );
   }
 
-  // Schedule a notification
   static Future<void> scheduleNotification({
     required int id,
     required String title,
     required String body,
-    required DateTime scheduledDate, // your local DateTime
+    required DateTime scheduledDate,
     String? payload,
     String? channelId,
     String? channelName,
@@ -113,7 +106,7 @@ class LocalNotificationsService {
     id,
     title,
     body,
-    // build a TZDateTime in the correct local zone:
+    // correct timezone
     tz.TZDateTime(
       tz.local,
       scheduledDate.year,
@@ -141,39 +134,31 @@ class LocalNotificationsService {
     matchDateTimeComponents: matchDateTimeComponents,
   );
 
-  // Cancel notification
   static Future<void> cancelNotification(int id) async {
     await _notificationsPlugin.cancel(id);
   }
 
-  // Cancel all notifications
   static Future<void> cancelAllNotifications() async {
     await _notificationsPlugin.cancelAll();
   }
 
-  // Get notification launch details
   static Future<NotificationAppLaunchDetails?>
   getNotificationAppLaunchDetails() async {
     return await _notificationsPlugin.getNotificationAppLaunchDetails();
   }
 
-  // get pending notifications
   static Future<List<PendingNotificationRequest>>
   getPendingNotifications() async {
     return await _notificationsPlugin.pendingNotificationRequests();
   }
 
-  /// Reschedule all given notifications using the common scheduleNotification method
   static Future<void> rescheduleAll(
     List<PlantNotification> notifications,
   ) async {
     await cancelAllNotifications();
 
-    // Use a timezone‐aware "now"
     final tzNow = tz.TZDateTime.now(tz.local);
-
     for (final n in notifications) {
-      // Build the exact TZDateTime you intend to schedule
       final tzDate = tz.TZDateTime(
         tz.local,
         n.nextOccurrence.year,
@@ -183,8 +168,7 @@ class LocalNotificationsService {
         n.nextOccurrence.minute,
       );
 
-      // Skip anything that's not strictly in the future
-      if (!tzDate.isAfter(tzNow)) continue;
+      if (!tzDate.isAfter(tzNow)) continue; // skip non future
 
       await scheduleNotification(
         id: n.id,

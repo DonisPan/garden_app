@@ -48,5 +48,6 @@ class ProfileViewModel extends ChangeNotifier {
   Future<void> enableNotifications(bool enabled) async {
     notificationsEnabled = enabled;
     notifyListeners();
+    // TODO: Implement option to turn all notifications on and off
   }
 }

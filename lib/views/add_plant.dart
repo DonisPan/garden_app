@@ -37,7 +37,7 @@ class AddPlantPage extends StatelessWidget {
                       ),
                     ),
                   const SizedBox(height: 10),
-                  // name
+                  // plant name
                   viewModel.isCustom
                       ? _buildTextField(
                         controller: viewModel.customNameController,

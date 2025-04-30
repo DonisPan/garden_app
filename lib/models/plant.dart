@@ -41,9 +41,9 @@ class Plant {
     notifications.remove(notification);
   }
 
-  void clearNotifications() {
-    notifications.clear();
-  }
+  // void clearNotifications() {
+  //   notifications.clear();
+  // }
 }
 
 class PlantFamily {

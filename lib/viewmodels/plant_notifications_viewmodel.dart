@@ -10,16 +10,12 @@ class PlantNotificationsViewModel extends ChangeNotifier {
   final Plant plant;
   final PlantRepository plantRepository;
 
-  // *** form state backing fields ***
   DateTime _pickDate;
   TimeOfDay _pickTime;
   bool _repeat;
   int _days;
-
-  // Message controller for the notification message input
   final TextEditingController messageController;
 
-  // Constructor initializes state
   PlantNotificationsViewModel({
     required this.plant,
     required this.plantRepository,
@@ -29,7 +25,6 @@ class PlantNotificationsViewModel extends ChangeNotifier {
        _days = 1,
        messageController = TextEditingController();
 
-  // Public getters and setters with notification
   DateTime get pickDate => _pickDate;
   set pickDate(DateTime val) {
     _pickDate = val;
@@ -54,13 +49,9 @@ class PlantNotificationsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // List of existing notifications for the plant
   List<PlantNotification> get notifications => plant.notifications;
 
-  // Schedule with the OS
-  Future<void> _scheduleSystemNotification(
-    PlantNotification notification,
-  ) async {
+  Future<void> scheduleNotification(PlantNotification notification) async {
     await LocalNotificationsService.scheduleNotification(
       id: notification.id,
       title: plant.name,
@@ -72,7 +63,6 @@ class PlantNotificationsViewModel extends ChangeNotifier {
     );
   }
 
-  // Create a new reminder
   Future<void> addNotification({
     required String message,
     required DateTime startDate,
@@ -85,11 +75,10 @@ class PlantNotificationsViewModel extends ChangeNotifier {
       repeatEveryDays,
     );
     plant.addNotification(newNotification!);
-    await _scheduleSystemNotification(newNotification);
+    await scheduleNotification(newNotification);
     notifyListeners();
   }
 
-  // Delete reminder permanently
   Future<void> deleteNotification(PlantNotification notification) async {
     await LocalNotificationsService.cancelNotification(notification.id);
     plantRepository.removeNotification(notification);
@@ -97,7 +86,6 @@ class PlantNotificationsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Navigation helpers
   void leftButton(BuildContext context) => Navigator.of(context).pop();
 
   void rightButton(BuildContext context) {

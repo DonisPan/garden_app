@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:garden_app/models/plant.dart';
 import 'package:garden_app/repositories/plant_repository.dart';
@@ -119,16 +120,16 @@ Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
           borderRadius: BorderRadius.circular(15),
           side: const BorderSide(color: Colors.black, width: 2),
         ),
-        title: const Text(
-          "Choose image source",
+        title: Text(
+          'plant_detail.image_source.dialog'.tr(),
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 18,
           ),
         ),
-        content: const Text(
-          "Select image from gallery or take a new photo",
+        content: Text(
+          'plant_detail.image_source.description'.tr(),
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
         actions: [
@@ -139,7 +140,7 @@ Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
                   onPressed:
                       () => Navigator.of(dialogContext).pop(ImageSource.camera),
                   style: TextButton.styleFrom(foregroundColor: Colors.black),
-                  child: const Text("Camera"),
+                  child: Text('plant_detail.image_source.camera'.tr()),
                 ),
               ),
               Expanded(
@@ -148,7 +149,7 @@ Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
                       () =>
                           Navigator.of(dialogContext).pop(ImageSource.gallery),
                   style: TextButton.styleFrom(foregroundColor: Colors.black),
-                  child: const Text("Gallery"),
+                  child: Text('plant_detail.image_source.galery'.tr()),
                 ),
               ),
             ],
@@ -159,44 +160,48 @@ Future<ImageSource?> showImageSourceDialog(BuildContext context) async {
   );
 }
 
-Future<void> confirmDeleteImage(BuildContext context, File imageFile) async {
-  final bool? confirmed = await showDialog<bool>(
+Future<bool?> confirmDeleteImage(BuildContext context, File imageFile) {
+  return showDialog<bool>(
     context: context,
-    builder: (BuildContext dialogContext) {
+    builder: (dialogContext) {
       return AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
           side: const BorderSide(color: Colors.black, width: 2),
         ),
-        title: const Text(
-          "Confirm Deletion",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        title: Text(
+          'plant_detail.delete_image.dialog'.tr(),
+          style: const TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        content: const Text(
-          "Are you sure you want to delete this image?",
-          style: TextStyle(color: Colors.black),
+        content: Text(
+          'plant_detail.delete_image.description'.tr(),
+          style: const TextStyle(color: Colors.black),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
             style: TextButton.styleFrom(foregroundColor: Colors.black),
-            child: const Text("Cancel"),
+            child: Text('plant_detail.delete_image.cancel'.tr()),
           ),
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
             style: TextButton.styleFrom(foregroundColor: Colors.black),
-            child: const Text("Delete"),
+            child: Text('plant_detail.delete_image.confirm'.tr()),
           ),
         ],
       );
     },
-  );
-
-  if (confirmed == true) {
-    Provider.of<PlantDetailViewModel>(
-      context,
-      listen: false,
-    ).removeImage(imageFile);
-  }
+  ).then((confirmed) {
+    if (confirmed == true) {
+      Provider.of<PlantDetailViewModel>(
+        context,
+        listen: false,
+      ).removeImage(imageFile);
+    }
+    return confirmed;
+  });
 }

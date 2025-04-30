@@ -57,10 +57,22 @@
       "no_plant_family": "Nedefinované",
       "custom_plant": "Vlastná rastlina:",
       "yes": "Áno",
-      "no": "Nie"
+      "no": "Nie"      
     },
     "delete_plant": "Odstrániť rastlinu",
+    "delete_image": {
+      "dialog": "Potvrdiť vymazanie",
+      "description": "Chceš vymazať tento obrázok?",
+      "cancel": "Zrušiť",
+      "confirm": "Vymazať"
+    },
     "manage_notifications": "Upozornenia",
+    "image_source": {
+        "dialog": "Vyber zdroj obrázka",
+        "description": "Vyber obrázok z galérie alebo vyfoť nový",
+        "camera": "Kamera",
+        "galery": "Galéria"
+      },
     "add_image": "Pridať obrázok",
     "no_images": "Žiadne obrázky neboli pridané."
   },

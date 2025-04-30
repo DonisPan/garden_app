@@ -90,16 +90,19 @@ class SupabaseService {
       var result = await Supabase.instance.client.auth.signUp(
         email: email,
         password: password,
-      ); // register into supabase auth
+      );
       var userId = result.user?.id;
 
       if (userId == null) {
         return 'Registration failed';
       }
 
-      await Supabase.instance.client.from('ga_users').insert(
-        {'auth_id': userId, 'name': name, 'surname': surname},
-      ); // after succesfull registration insert additional data into users table
+      // after succesfull registration insert additional data into users table
+      await Supabase.instance.client.from('ga_users').insert({
+        'auth_id': userId,
+        'name': name,
+        'surname': surname,
+      });
     } catch (error) {
       return 'Could not instert additional data';
     }
@@ -454,7 +457,6 @@ class SupabaseService {
   }
 
   Future<List<PlantNotification>> getAllNotifications() async {
-    // 1) Find all ga_user_plants IDs for this user
     final userId = await Global().getUserId();
     final userPlantsResponse = await Supabase.instance.client
         .from('ga_user_plants')
@@ -465,7 +467,6 @@ class SupabaseService {
 
     if (userPlantIds.isEmpty) return [];
 
-    // 2) Fetch reminders for those plants
     final response = await Supabase.instance.client
         .from('ga_user_reminders')
         .select('id, plant_id, frequency, next_due_date, message')
@@ -473,7 +474,7 @@ class SupabaseService {
         .order('next_due_date', ascending: true);
     final remData = response as List<dynamic>;
 
-    // 3) Map into PlantNotification
+    // map to PlantNotification
     return remData.map((raw) {
       final m = raw as Map<String, dynamic>;
       return PlantNotification(
@@ -491,13 +492,12 @@ class SupabaseService {
     List<Plant> userPlants,
   ) async {
     try {
-      // 1) Grab all announcers
       final response = await Supabase.instance.client
           .from('ga_announcers')
           .select('family, message');
       final rawList = response as List<dynamic>;
 
-      // 2) Build a lookup: familyId → plant names you own
+      // notifications only for user plants
       final Map<int, List<String>> familyIdToPlantNames = {};
       for (var p in userPlants) {
         final fam = p.plantFamily?.id;
@@ -507,37 +507,19 @@ class SupabaseService {
       }
       if (familyIdToPlantNames.isEmpty) return [];
 
-      // 3) Filter & map
       final result = <AdminAnnouncer>[];
       for (var raw in rawList) {
         final row = raw as Map<String, dynamic>;
         final famField = row['family'];
 
-        // normalize the family field into a List<int>
         List<int> famIds;
-        if (famField is List<dynamic>) {
-          // sometimes the driver returns an actual list
-          famIds = List<int>.from(famField.cast<dynamic>());
-        } else if (famField is int) {
-          // single family ID
+        if (famField is int) {
           famIds = [famField];
-        } else if (famField is String) {
-          // PostgREST sometimes returns "{3,7}" as a string
-          var raw = famField.trim();
-          if (raw.startsWith('{') && raw.endsWith('}')) {
-            raw = raw.substring(1, raw.length - 1);
-          }
-          famIds =
-              raw
-                  .split(',')
-                  .map((s) => int.tryParse(s.trim()))
-                  .whereType<int>()
-                  .toList();
         } else {
           famIds = [];
         }
 
-        // collect the plant names for any shared family IDs
+        // get plant names for families
         final plantNames = <String>{};
         for (var fid in famIds) {
           final names = familyIdToPlantNames[fid];

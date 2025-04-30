@@ -25,9 +25,6 @@ class HomeViewModel extends ChangeNotifier {
     fetchPlants();
   }
 
-  String _searchQuery = '';
-  String get searchQuery => _searchQuery;
-
   void updateSearchQuery(String query) {
     if (query.isEmpty) {
       _filteredPlants = List.from(_plants);
@@ -41,34 +38,6 @@ class HomeViewModel extends ChangeNotifier {
               .toList();
     }
     notifyListeners();
-  }
-
-  void leftButton(BuildContext context) {
-    Global().authorized
-        ? Navigator.pushNamed(context, '/profile')
-        : Navigator.pushNamed(context, '/login');
-  }
-
-  void rightButton(BuildContext context) {
-    Navigator.pushNamed(context, '/addPlant');
-  }
-
-  Future<void> fetchPlants() async {
-    final userId = await Global().getUserId();
-    if (userId == null) {
-      _plants = [];
-      return;
-    }
-    _plants = await plantRepository.getPlants(userId);
-    _filteredPlants = _plants;
-    notifyListeners();
-    fetchAnnouncers();
-  }
-
-  @override
-  void dispose() {
-    searchQueryController.dispose();
-    super.dispose();
   }
 
   Future<void> fetchAnnouncers() async {
@@ -86,9 +55,37 @@ class HomeViewModel extends ChangeNotifier {
                     plantRepository: context.read<PlantRepository>(),
                     announcers: specialAnnouncers,
                   ),
-              child: const SpecialAnnouncersPage(),
+              child: SpecialAnnouncersPage(announcers: specialAnnouncers),
             ),
       ),
     );
+  }
+
+  Future<void> fetchPlants() async {
+    final userId = await Global().getUserId();
+    if (userId == null) {
+      _plants = [];
+      return;
+    }
+    _plants = await plantRepository.getPlants(userId);
+    _filteredPlants = _plants;
+    notifyListeners();
+    fetchAnnouncers();
+  }
+
+  void leftButton(BuildContext context) {
+    Global().authorized
+        ? Navigator.pushNamed(context, '/profile')
+        : Navigator.pushNamed(context, '/login');
+  }
+
+  void rightButton(BuildContext context) {
+    Navigator.pushNamed(context, '/addPlant');
+  }
+
+  @override
+  void dispose() {
+    searchQueryController.dispose();
+    super.dispose();
   }
 }

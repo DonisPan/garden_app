@@ -19,12 +19,6 @@ class RegisterViewModel extends ChangeNotifier {
   String? get errorMessage => _errorMessage;
   bool get isLoading => _isLoading;
 
-  // update profile picture
-  void setProfilePicture(File file) {
-    profilePicture = file;
-    notifyListeners();
-  }
-
   // validation
   String? validate(String name, String surname, String email, String password) {
     if (name.isEmpty || surname.isEmpty || email.isEmpty || password.isEmpty) {

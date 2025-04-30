@@ -6,8 +6,7 @@ import 'package:garden_app/widgets/top_bar.dart';
 import 'package:provider/provider.dart';
 
 class AddPlantNotificationPage extends StatelessWidget {
-  const AddPlantNotificationPage({Key? key, required this.plant})
-    : super(key: key);
+  const AddPlantNotificationPage({super.key, required this.plant});
 
   final Plant plant;
 
@@ -47,7 +46,7 @@ class AddPlantNotificationPage extends StatelessWidget {
             if (t != null) viewModel.pickTime = t;
           }
 
-          Widget _buildTextField({
+          Widget buildTextField({
             required TextEditingController controller,
             required String label,
             TextInputType keyboardType = TextInputType.text,
@@ -80,7 +79,7 @@ class AddPlantNotificationPage extends StatelessWidget {
             );
           }
 
-          Widget _buildPicker({
+          Widget buildPicker({
             required String value,
             required VoidCallback onTap,
           }) {
@@ -120,15 +119,15 @@ class AddPlantNotificationPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildTextField(
+                  buildTextField(
                     controller: viewModel.messageController,
                     label: 'notifications.message_label'.tr(),
                   ),
-                  _buildPicker(
+                  buildPicker(
                     value: DateFormat.yMMMd().format(viewModel.pickDate),
                     onTap: selectDate,
                   ),
-                  _buildPicker(
+                  buildPicker(
                     value: viewModel.pickTime.format(context),
                     onTap: selectTime,
                   ),
@@ -146,7 +145,7 @@ class AddPlantNotificationPage extends StatelessWidget {
                     ],
                   ),
                   if (viewModel.repeat)
-                    _buildTextField(
+                    buildTextField(
                       controller: TextEditingController(
                         text: viewModel.days.toString(),
                       ),
