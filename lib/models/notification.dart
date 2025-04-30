@@ -1,3 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
+
 class PlantNotification {
   final int id;
   final int plantId;
@@ -16,9 +18,13 @@ class PlantNotification {
   });
 
   String get frequencyDescription {
-    if (repeatEveryDays == null) return 'One time';
-    if (repeatEveryDays == 1) return 'Daily';
-    return 'Every $repeatEveryDays days';
+    if (repeatEveryDays == null) {
+      return 'notifications.frequency_descriptor.one_time'.tr();
+    }
+    if (repeatEveryDays == 1) {
+      return 'notifications.frequency_descriptor.daily'.tr();
+    }
+    return "${'notifications.frequency_descriptor.every'.tr()} $repeatEveryDays ${'notifications.frequency_descriptor.days'.tr()}";
   }
 
   List<DateTime> getNextOccurrences(int count) {

@@ -70,6 +70,12 @@
       "empty": "Žiadne upozornenia",
       "starts": "Začína",
       "frequency": "Opakuje sa",
+      "frequency_descriptor": {
+        "one_time": "Raz",
+        "daily": "Denne",
+        "every": "Každých",
+        "days": "dní"
+      },
       "next": "Najbližšie",
       "message_label": "Zadaj text upozornenia",
       "repeat": "Opakovať",

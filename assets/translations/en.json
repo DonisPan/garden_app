@@ -76,6 +76,12 @@
       "empty": "No reminders yet",
       "starts": "Starts",
       "frequency": "Frequency",
+      "frequency_descriptor": {
+        "one_time": "Once",
+        "daily": "Daily",
+        "every": "Every",
+        "days": "days"
+      },
       "next": "Next",
       "message_label": "Enter reminder message",
       "repeat": "Repeat",
